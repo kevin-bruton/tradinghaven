@@ -1,0 +1,62 @@
+ [IntrabarOrderGeneration = True];
+input: StrategyName("StrategyName");
+{
+	UPDATES FILES FOR STRATEGY TRACKING
+	FILES FOR EACH STRATEGY:
+		status.json: broker/data feed connection status, symbol, broker positions, strategy positions
+		trades.csv: record of all closed trades
+		events.csv: for notifications to be sent when a position is opened/closed, connection broken etc.
+}
+
+vars:
+	Intrabarpersist isConnected(false),
+	Intrabarpersist BaseFileName(""),
+	MP(0),
+	IntrabarPersist prevMP(0),
+	curPos(""),
+	prevPos(""),
+	action(""),
+	posState(""),
+	curPosState(""),
+	tradeStr("");
+
+once begin
+  BaseFileName = "C:\TraderHaven\" + StrategyName;
+end;
+	
+MP = MarketPosition * CurrentContracts;
+
+// Changed position
+if MP <> prevMP and PosTradeCount(1) > 0 then begin
+	curPos = NumToStr(MP, 0);
+	prevPos = NumToStr(prevMP, 0);
+	if MP > prevMP then action = "Buy " else action = "Sell";
+	
+	if PosTradeIsOpen(1, 0) then posState = "Open" else posState = "Closed";
+	if PosTradeIsOpen(0, 0) then curPosState = "Open" else curPosState = "Closed";
+	// tradeStr = NumToStr(Year(Date), 0) + "-" + NumToStr(Month(Date), 0) + "-" + NumToStr(DayOfMonth(Date), 0) + " " + NumToStr(Time_s, 0) +
+	tradeStr = DateTimeToString(PosTradeExitDateTime(1, 0)) +
+	    "; " + action +
+	    "; prevPos: " + prevPos +
+	    "; curPos: "  + curPos +
+		//     "; PosTradeSize: " + NumToStr(PosTradeSize, 0)
+		//    "; OpenPosProfit: " + NumToStr(OpenPositionProfit, 2) +
+	    "; PosProfit: " + NumToStr(PositionProfit(1), 2) + 
+	    "; ProfitChecked: " + NumToStr(PositionProfit_Checked(1), 2) +
+	    "; PosTradeProfit: " + NumToStr(PosTradeProfit(1, 0), 2) +
+	    "; PosTradeEntryPrice: " + NumToStr(PosTradeEntryPrice(1, 0), 4) +
+	    "; PosTradeExitPrice: " + NumToStr(PosTradeExitPrice(1, 0), 4) +
+	    // "; PosTradeEntryBar: " + NumToStr(PosTradeEntryBar(1, 0), 0) +
+      	    "; NetProfit: " + NumToStr(NetProfit, 2) +
+      	    "; OpenEquity: " + NumToStr(i_OpenEquity, 2) +
+	    // "; PosTradeCopmmission: " + NumToStr(PosTradeCommission(1, 0), 2) +
+	    // "; PosTradeCount: " + NumToStr(PosTradeCount(1), 0) +
+	    // "; PosTradeIsOpen: " + posState +
+	    // "; CurPosTradeIsOpen: " + curPosState +
+	    NewLine;
+	FileAppend(BaseFileName + ".trades.csv", tradeStr);
+end;
+
+// Update the 'prevMP' variable for the next script calculation
+prevMP = MP;
+

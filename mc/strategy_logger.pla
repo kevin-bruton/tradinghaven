@@ -1,0 +1,23 @@
+Vars: Intrabarpersist FileName("trades.txt");
+Vars: Intrabarpersist StrategyName("TOP_UA_531_NQ_60");
+Vars: Direction(""), Content("");
+
+If MarketPosition <> MarketPosition[1] then begin
+  // Open the file for writing
+  // TextFile = FileAppend(FileName,);
+  if MarketPosition = 1 then Direction = "Buy"
+  else Direction = "Sell";
+  
+  Content = NumToStr(Year(Date), 0) + "-" + NumToStr(Month(Date), 0) + "-" + NumToStr(DayOfMonth(Date), 0) + ", " + 
+    NumToStr(Time, 0) + ", " +
+    GetSymbolName + ", " +
+    Direction + ", " + 
+    NumToStr(CurrentContracts, 0) + ", " +
+    NumToStr(EntryPrice, 2) + ", " +
+    StrategyName;
+    
+  FileAppend(FileName, Content);
+
+  // Close the file
+//   File_Close(TextFile);
+end;
