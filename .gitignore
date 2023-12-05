@@ -19,4 +19,5 @@ venv*
 .pytest_cache
 __pycache__
 .eggs
-data
+haven.db
+config.json

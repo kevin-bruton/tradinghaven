@@ -1,6 +1,6 @@
-import save_orders from db.orders
-
-filename = './scripts/TradingServer_874C_34636_Trace.txt'
+from db.orders import save_orders
+from db.positions import save_positions
+from utils.config import get_config_value
 
 orders = []
 positions = []
@@ -66,6 +66,7 @@ def process_onorder_event(content):
     orders.append({ 'br_id': br_id })
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
+  order['br_id_str'] = get_key_value(content, 'BrIDStr')
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -92,6 +93,7 @@ def process_popactiveorder_event(content):
     orders.append({ 'br_id': br_id })
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
+  order['br_id_str'] = get_key_value(content, 'BrIDStr')
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -175,89 +177,23 @@ def save_positions_table():
       f.write(str(positions.get('fill_qty', '')) + ',')
       f.write(str(positions.get('fill_price', '')) + '\n')
 
-def db_save_orders():
-  conn = sqlite3.connect('./data/haven.db')
-  c = conn.cursor()
-  for order in orders:
-    c.execute('''
-      INSERT INTO orders
-        (br_id, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-      ''', (
-        order.get('br_id', ''),
-        order.get('br_id_str', ''),
-        order.get('strategy_name', ''),
-        order.get('order_name', ''),
-        order.get('account', ''),
-        order.get('symbol', ''),
-        order.get('exchange', ''),
-        order.get('contract', ''),
-        order.get('broker_profile', ''),
-        order.get('strat_state', ''),
-        order.get('opl', ''),
-        order.get('realized_pl', ''),
-        order.get('generated', ''),
-        order.get('final', ''),
-        order.get('action', ''),
-        order.get('order_type', ''),
-        order.get('qty', ''),
-        order.get('price', ''),
-        order.get('state', ''),
-        order.get('fill_qty', ''),
-        order.get('fill_price', '')
-      ))
-  conn.commit()
+def get_latest_orders():
+  logfile = get_config_value('multicharts_data_directory') + 'TradingServer_874C_34636_Trace.txt'
+  with open(logfile, 'r') as f:
+    for line in f:
+      content_idx = line.find(' ')
+      content = line[content_idx+1:].strip()
+      if is_strategy_order(content):
+        process_strategy_order(content)
+      elif is_onorder_event(content):
+        process_onorder_event(content)
+      elif is_popactiveorder_event(content):
+        process_popactiveorder_event(content)
+      elif is_set_position(content):
+        process_set_position(content)
 
-def db_save_positions():
-  conn = sqlite3.connect('./data/haven.db')
-  c = conn.cursor()
-  for position in positions:
-    c.execute('''
-      INSERT INTO positions
-        (br_id, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-      ''', (
-        position.get('br_id', ''),
-        position.get('br_id_str', ''),
-        position.get('strategy_name', ''),
-        position.get('order_name', ''),
-        position.get('account', ''),
-        position.get('symbol', ''),
-        position.get('exchange', ''),
-        position.get('contract', ''),
-        position.get('broker_profile', ''),
-        position.get('strat_state', ''),
-        position.get('opl', ''),
-        position.get('realized_pl', ''),
-        position.get('generated', ''),
-        position.get('final', ''),
-        position.get('action', ''),
-        position.get('order_type', ''),
-        position.get('qty', ''),
-        position.get('price', ''),
-        position.get('state', ''),
-        position.get('fill_qty', ''),
-        position.get('fill_price', '')
-      ))
-  conn.commit()
-
-with open(filename, 'r') as f:
-  for line in f:
-    content_idx = line.find(' ')
-    content = line[content_idx+1:].strip()
-    if is_strategy_order(content):
-      process_strategy_order(content)
-    elif is_onorder_event(content):
-      process_onorder_event(content)
-    elif is_popactiveorder_event(content):
-      process_popactiveorder_event(content)
-    elif is_set_position(content):
-      process_set_position(content)
-
-save_orders_table()
-save_positions_table()
-
-# db_save_orders()
-# db_save_positions()
-
-save_orders(orders.values())
+  # save_orders_table()
+  # save_positions_table()
+  save_orders(orders)
+  save_positions(positions)
+  print('Saved orders and positions')

@@ -2,11 +2,11 @@
 
 
 a = Analysis(
-    ['packager.py'],
+    ['server.py'],
     pathex=['~/.pyenv/versions/venv-haven'],
     binaries=[],
     datas=[],
-    hiddenimports=['tradinghaven'],
+    hiddenimports=['api_routes'],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
