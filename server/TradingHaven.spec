@@ -3,7 +3,7 @@
 
 a = Analysis(
     ['server.py'],
-    pathex=['~/.pyenv/versions/venv-haven'],
+    pathex=['C:/Users/Admin/.pyenv/versions/venv-haven'],
     binaries=[],
     datas=[],
     hiddenimports=['api_routes'],

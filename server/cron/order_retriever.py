@@ -1,3 +1,4 @@
+import os
 from db.orders import save_orders
 from db.positions import save_positions
 from utils.config import get_config_value
@@ -178,8 +179,18 @@ def save_positions_table():
       f.write(str(positions.get('fill_price', '')) + '\n')
 
 def get_latest_orders():
-  logfile = get_config_value('multicharts_data_directory') + 'TradingServer_874C_34636_Trace.txt'
-  with open(logfile, 'r') as f:
+  logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
+  logfiles = [f for f in os.listdir(logdir) if f.startswith('TradingServer')]
+  if len(logfiles) == 0:
+    return
+  last_modified = 0
+  logfile = ''
+  for logf in logfiles:
+    t_modified = os.path.getmtime(logdir + logf)
+    if t_modified > last_modified:
+      last_modified = t_modified
+      logfile = logf
+  with open(logdir + logfile, 'r') as f:
     for line in f:
       content_idx = line.find(' ')
       content = line[content_idx+1:].strip()
@@ -194,6 +205,6 @@ def get_latest_orders():
 
   # save_orders_table()
   # save_positions_table()
-  save_orders(orders)
-  save_positions(positions)
-  print('Saved orders and positions')
+  orders_inserted = save_orders(orders)
+  positions_inserted = save_positions(positions)
+  print('Saved', orders_inserted, 'orders and', positions_inserted, 'positions')

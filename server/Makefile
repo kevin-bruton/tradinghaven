@@ -8,8 +8,11 @@ clean:
 	rm -rf ./TradingHaven.spec
 
 package:
-	pyinstaller --name TradingHaven --paths=~/.pyenv/versions/venv-haven --hidden-import api_routes server.py
-	cp ./config.json ./dist/TradingHaven
+	pyinstaller --name TradingHaven --paths=C:/Users/Admin/.pyenv/versions/venv-haven --hidden-import api_routes server.py
+	cp ../config.json ./dist/TradingHaven
 
 run:
 	./dist/TradingHaven/TradingHaven
+
+venv:
+	C:/Users/Admin/.pyenv/versions/venv-haven/Scripts/activate

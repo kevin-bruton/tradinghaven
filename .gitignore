@@ -21,3 +21,4 @@ __pycache__
 .eggs
 haven.db
 config.json
+haven.db-journal
