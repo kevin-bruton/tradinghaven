@@ -1,5 +1,5 @@
 from os import path
-root_dir = path.abspath(path.dirname(__file__) + '/..')
+root_dir = path.abspath(path.dirname(__file__))
 from utils.config import load_config
 load_config(root_dir)
 

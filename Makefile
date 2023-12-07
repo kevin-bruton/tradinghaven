@@ -1,6 +1,6 @@
 # Package the project for distribution
 
-all: clean package run
+all: clean package
 
 clean:
 	rm -rf ./dist
@@ -8,8 +8,12 @@ clean:
 	rm -rf ./TradingHaven.spec
 
 package:
-	pyinstaller --name TradingHaven --paths=C:/Users/Admin/.pyenv/versions/venv-haven --hidden-import api_routes server.py
-	cp ../config.json ./dist/TradingHaven
+	pyinstaller \
+		--name TradingHaven \
+		--paths=C:/Users/Admin/.pyenv/versions/venv-haven \
+		--hidden-import api_routes \
+		server.py
+	cp ./config.json ./dist/TradingHaven\_internal/
 
 run:
 	./dist/TradingHaven/TradingHaven
