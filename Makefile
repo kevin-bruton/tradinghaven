@@ -18,5 +18,8 @@ package:
 run:
 	./dist/TradingHaven/TradingHaven
 
+dev:
+	python server.py
+
 venv:
 	C:/Users/Admin/.pyenv/versions/venv-haven/Scripts/activate
