@@ -90,13 +90,17 @@ def init_db():
         (strategy_name PRIMARY KEY, description, symbols, type, timeframes);
       ''')
     c.execute('''
-      CREATE TRIGGER insert_strategy
-      BEFORE INSERT ON orders
-      FOR EACH ROW
-      BEGIN
-        INSERT OR IGNORE INTO strategies (strategy_name) VALUES (NEW.strategy_name);
-      END;
+        SELECT name FROM sqlite_master WHERE type='trigger' AND name='insert_strategy';
       ''')
+    if c.fetchone() is None:
+      c.execute('''
+        CREATE TRIGGER insert_strategy
+        BEFORE INSERT ON orders
+        FOR EACH ROW
+        BEGIN
+          INSERT OR IGNORE INTO strategies (strategy_name) VALUES (NEW.strategy_name);
+        END;
+        ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS symbols
         (symbol PRIMARY KEY, contract, min_avg_trade, slippage, tick_size, tick_value, margin, multiplier, exchange);
