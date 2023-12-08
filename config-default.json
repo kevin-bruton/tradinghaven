@@ -1,0 +1,10 @@
+{
+  "database_directory": "C:/TradingHaven/",
+  "multicharts_data_directory": "C:/Users/Admin/AppData/Local/TS Support/MultiCharts64/14.0.25218.400/",
+  "orders_update_frequency": "1_m",
+  "connection_update_frequency": "30_s",
+  "send_connection_messages": true,
+  "send_position_messages": true,
+  "telegram_token": "",
+  "telegram_chat_id": ""
+}

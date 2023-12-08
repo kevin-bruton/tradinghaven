@@ -13,7 +13,10 @@ package:
 		--paths=C:/Users/Admin/.pyenv/versions/venv-haven \
 		--hidden-import api_routes \
 		server.py
-	cp ./config.json ./dist/TradingHaven\_internal/
+	cp ./config-default.json ./dist/TradingHaven\_internal/config.json
+
+config:
+	cp ./config.json ./dist/TradingHaven\_internal/config.json
 
 run:
 	./dist/TradingHaven/TradingHaven

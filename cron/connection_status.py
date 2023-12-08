@@ -1,10 +1,9 @@
 import os
 from datetime import datetime
-from db.orders import save_orders
-from db.positions import save_positions
 from db.connection_events import save_connection_events
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
+from utils.telegram import sendMessage
 
 last_ib_tws_status_connected = None
 last_tws_mc_status_connected = None
@@ -20,6 +19,10 @@ def ts_to_str(ts):
 def logtime_to_ts(str):
   return datetime.strptime(str, '%d.%m.%Y/%H:%M:%S.%f').timestamp()
 
+def sendConnectionMessage(message):
+  if get_config_value('send_connection_messages'):
+    sendMessage(message)
+
 def is_ib_tws_connected_event(content):
   return bool(content.count('Connectivity between IB and Trader Workstation has been restored'))
 
@@ -28,6 +31,7 @@ def process_ib_tws_connected_event(ts):
   if last_ib_tws_status_connected != True:
     connection_events.append({ 'ts': ts, 'type': 'ib_tws', 'connected': True })
     last_ib_tws_status_connected = True
+    sendConnectionMessage(f'{ts_to_str(ts)}: IB - TWS Connection Restored')
 
 def is_ib_tws_disconnected_event(content):
   return bool(content.count('Connectivity between IB and Trader Workstation has been lost'))
@@ -37,6 +41,7 @@ def process_ib_tws_disconnected_event(ts):
   if last_ib_tws_status_connected != False:
     connection_events.append({ 'ts': ts, 'type': 'ib_tws', 'connected': False })
     last_ib_tws_status_connected = False
+    sendConnectionMessage(f'{ts_to_str(ts)}: IB - TWS Connection Lost')
 
 def is_tws_mc_connected_event(content):
   return bool(content.count('<= ib_server::CIBServerImpl::OnConnectionRestored'))
@@ -46,6 +51,7 @@ def process_tws_mc_connected_event(ts):
   if last_tws_mc_status_connected != True:
     connection_events.append({ 'ts': ts, 'type': 'tws_mc', 'connected': True })
     last_tws_mc_status_connected = True
+    sendConnectionMessage(f'{ts_to_str(ts)}: TWS - MC Connection Restored')
 
 def is_tws_mc_disconnected_event(content):
   return bool(content.count('<= ib_server::CIBServer::OnConnectionLost')) \
@@ -56,6 +62,7 @@ def process_tws_mc_disconnected_event(ts):
   if last_tws_mc_status_connected != False:
     connection_events.append({ 'ts': ts, 'type': 'tws_mc', 'connected': False })
     last_tws_mc_status_connected = False
+    sendConnectionMessage(f'{ts_to_str(ts)}: TWS - MC Connection Lost')
 
 def is_data_connected_event(content):
   return bool(content.count('Market data farm connection is OK:usfuture')) \
@@ -66,6 +73,7 @@ def process_data_connected_event(ts):
   if last_data_status_connected != True:
     connection_events.append({ 'ts': ts, 'type': 'data', 'connected': True })
     last_data_status_connected = True
+    sendConnectionMessage(f'{ts_to_str(ts)}: Data Connection Restored')
 
 def is_data_disconnected_event(content):
   return bool(content.count('Market data farm connection is broken:usfuture'))
@@ -75,6 +83,7 @@ def process_data_disconnected_event(ts):
   if last_data_status_connected != False:
     connection_events.append({ 'ts': ts, 'type': 'data', 'connected': False })
     last_data_status_connected = False
+    sendMessage(f'{ts_to_str(ts)}: Data Connection Lost')
 
 def get_connection_status():
   global last_logfile_modification

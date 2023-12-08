@@ -5,7 +5,11 @@ default_config = {
   "database_directory": ".",
   "multicharts_data_directory": ".",
   "orders_update_frequency": "1_h",
-  "connection_update_frequency": "15_s"
+  "connection_update_frequency": "15_s",
+  "send_connection_messages": False,
+  "send_position_messages": False,
+  "telegram_token": "",
+  "telegram_chat_id": ""
 }
 
 def load_config(root_dir):

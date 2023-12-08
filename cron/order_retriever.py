@@ -4,12 +4,34 @@ from db.orders import save_orders
 from db.positions import save_positions
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
+from utils.telegram import sendMessage
 
 orders = []
 positions = []
 last_filled_order = None
 last_logfile_modification = None
 last_read_log_entry_ts = None
+
+def sendPositionMessage(position):
+  enabled = get_config_value('send_position_messages')
+  if enabled:
+    message = f"""Position change:  
+    Strategy: {position['strategy_name']} {position['order_name']}  
+    Account: {position['account']}  
+    Symbol: {position['symbol']} {position['contract']}  
+    Qty: {position['qty']}  
+    Price: {position['price']}  
+    OPL: {position['opl']}  
+    Realized P/L: {position['realized_pl']}   
+    Generated: {position['generated']}    
+    Final: {position['final']}    
+    Action: {position['action']}    
+    Order Type: {position['order_type']}    
+    State: {position['state']}    
+    Fill Qty: {position['fill_qty']}  
+    Fill Price: {position['fill_price']}  
+    """
+    sendMessage(message)
 
 def logtime_to_ts(str):
   return datetime.strptime(str, '%d.%m.%Y/%H:%M:%S.%f').timestamp()
@@ -132,6 +154,7 @@ def process_set_position(content):
   order['opl_orig'] = float(columns[7].split('=')[1][:-1])
   order['realized_pl'] = float(columns[8].split('=')[1][:-1])
   positions.append(order)
+  sendPositionMessage(order)
 
 def save_orders_table():
   with open('orders.csv', 'w') as f:
