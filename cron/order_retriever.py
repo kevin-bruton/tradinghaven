@@ -1,11 +1,18 @@
 import os
+from datetime import datetime
 from db.orders import save_orders
 from db.positions import save_positions
+from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
 
 orders = []
 positions = []
 last_filled_order = None
+last_logfile_modification = None
+last_read_log_entry_ts = None
+
+def logtime_to_ts(str):
+  return datetime.strptime(str, '%d.%m.%Y/%H:%M:%S.%f').timestamp()
 
 def get_strat_state(state_id):
   if state_id == '2': return 'Transmitted'
@@ -179,20 +186,58 @@ def save_positions_table():
       f.write(str(positions.get('fill_price', '')) + '\n')
 
 def get_latest_orders():
+  global last_logfile_modification
+  global last_read_log_entry_ts
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
   logfiles = [f for f in os.listdir(logdir) if f.startswith('TradingServer')]
   if len(logfiles) == 0:
     return
   last_modified = 0
+
+  # Get the latest trading server log file name (as there may be more than one)
   logfile = ''
   for logf in logfiles:
     t_modified = os.path.getmtime(logdir + logf)
     if t_modified > last_modified:
       last_modified = t_modified
       logfile = logf
+
+  # Only start reading the log file if it has been modified since the last read
+  if last_logfile_modification == None:
+    last_logfile_modification = get_timestamp('last_trading_server_logfile_modification')
+    if last_logfile_modification == None:
+      last_logfile_modification = 0
+  if last_modified <= last_logfile_modification:
+    # print('Log file not modified since last read')
+    return
+  save_timestamp(last_modified, 'last_trading_server_logfile_modification')
+  last_logfile_modification = last_modified
+
+  # Get the last read log entry timestamp
+  if last_read_log_entry_ts == None:
+    last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
+  
+  # Read log entries
   with open(logdir + logfile, 'r') as f:
     for line in f:
       content_idx = line.find(' ')
+      if content_idx == -1:
+        continue
+
+      # Only process log entries that are after the last read log entry
+      line_split = line[:content_idx].split('-')
+      if len(line_split) >= 3 and len(line_split[2]) == 23: 
+        current_log_entry_timestamp = logtime_to_ts(line_split[2])
+      else:
+        continue
+
+      if last_read_log_entry_ts and current_log_entry_timestamp < last_read_log_entry_ts:
+        #print('already read this log entry', last_read_log_entry_ts, current_log_entry_timestamp)
+        continue
+      #print('New log entry:', last_read_log_entry_ts, current_log_entry_timestamp)
+      last_read_log_entry_ts = current_log_entry_timestamp
+      save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
+
       content = line[content_idx+1:].strip()
       if is_strategy_order(content):
         process_strategy_order(content)

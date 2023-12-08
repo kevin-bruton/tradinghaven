@@ -22,3 +22,10 @@ def load_config(root_dir):
 
 def get_config_value(key):
   return config[key]
+
+def freq_str_to_secs(freq):
+  freq, units = freq.split('_')
+  if units == 's': return int(freq)
+  elif units == 'm': return int(freq) * 60
+  elif units == 'h': return int(freq) * 60 * 60
+  else: raise Exception('Invalid units for update frequency')

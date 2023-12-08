@@ -29,7 +29,7 @@ def mutate_many(sql, values: list[tuple]):
     conn.close()
   return rows_affected
 
-def select_one(sql, values):
+def query_one(sql, values):
   conn = sqlite3.connect(db_path)
   try:
     c = conn.cursor()
@@ -40,7 +40,7 @@ def select_one(sql, values):
     conn.close()
 
 
-def select_many(sql, values: list[tuple]):
+def query_many(sql, values: list[tuple]):
   conn = sqlite3.connect(db_path)
   try:
     c = conn.cursor()
@@ -104,6 +104,14 @@ def init_db():
     c.execute('''
       CREATE TABLE IF NOT EXISTS symbols
         (symbol PRIMARY KEY, contract, min_avg_trade, slippage, tick_size, tick_value, margin, multiplier, exchange);
+      ''')
+    c.execute('''
+      CREATE TABLE IF NOT EXISTS timestamps
+        (type PRIMARY KEY, timestamp);
+      ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS connection_events
+        (id PRIMARY KEY, ts, type, connected);
       ''')
     conn.commit()
   finally:
