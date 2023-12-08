@@ -100,7 +100,7 @@ def get_connection_status():
       last_logfile_modification = 0
   if last_modified <= last_logfile_modification:
     print('TWS log file not modified since last read')
-    #return
+    return
   save_timestamp(last_modified, 'last_tws_logfile_modification')
   last_logfile_modification = last_modified
 
@@ -109,8 +109,8 @@ def get_connection_status():
     last_read_log_entry_ts = get_timestamp('last_tws_log_read')
   
   # Read log entries
-  #with open(logdir + logfile, 'r') as f:
-  with open('C:/Users/Admin/repo/trading-haven/cron/TWSTradingPlugin_874C_34636_Trace.txt', 'r') as f:
+  with open(logdir + logfile, 'r') as f:
+  # with open('C:/Users/Admin/repo/trading-haven/cron/TWSTradingPlugin_874C_34636_Trace.txt', 'r') as f:
     for line in f:
       content_idx = line.find(' ')
       if content_idx == -1:
@@ -121,7 +121,6 @@ def get_connection_status():
       if len(line_split) < 3 or len(line_split[2]) != 23:
         #print('Invalid log entry:', line)
         continue
-      #print('Valid Log entry:', line)
       current_log_entry_timestamp = logtime_to_ts(line_split[2])
 
       if last_read_log_entry_ts and current_log_entry_timestamp < last_read_log_entry_ts:
