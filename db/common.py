@@ -1,3 +1,4 @@
+import sys
 import sqlite3
 from utils.config import get_config_value
 
@@ -51,7 +52,15 @@ def query_many(sql, values: list[tuple]):
     conn.close()
 
 def init_db():
-  conn = sqlite3.connect(db_path)
+  try:
+    conn = sqlite3.connect(db_path)
+  except sqlite3.Error as e:
+    print('ERROR: Could not create or connect to the database.\n')
+    print(f'Make sure the following directory exists: {get_config_value("database_directory")}')
+    print('as that is the directory you have specified in your config file.')
+    print('Make sure you have write permissions to that directory.')
+    input('\nPress any key to exit...')
+    sys.exit(1)
   try:
     c = conn.cursor()
     c.execute('''
