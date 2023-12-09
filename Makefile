@@ -12,6 +12,7 @@ package:
 		--name TradingHaven \
 		--paths=C:/Users/Admin/.pyenv/versions/venv-haven \
 		--hidden-import api_routes \
+		--icon=./stock.ico \
 		server.py
 	cp ./config-default.json ./dist/TradingHaven\_internal/config.json
 
