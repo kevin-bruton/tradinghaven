@@ -163,8 +163,9 @@ def process_set_position(logentry_ts, content):
   order['opl_orig'] = float(columns[7].split('=')[1][:-1])
   order['realized_pl'] = float(columns[8].split('=')[1][:-1])
   order['last_update'] = logentry_ts
-  positions.append(order)
-  sendPositionMessage(order)
+  if order['state'] == 'Filled':
+    positions.append(order)
+    sendPositionMessage(order)
 
 def get_logfilepath_modified():
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
@@ -217,7 +218,7 @@ def get_latest_orders():
   last_filled_order_id = get_last_filled_order_id()
   
   # Read log entries
-  print('Updating orders and positions at', datetime.now(), '...')
+  print('\nUpdating orders and positions at', datetime.now(), '...')
   with open(logfile, 'r') as f:
     for line in f:
       logentry_ts, content = get_logentry_ts_and_content(line)
@@ -245,4 +246,4 @@ def get_latest_orders():
 
   orders_inserted = save_orders(orders)
   positions_inserted = save_positions(positions)
-  print('  Orders and positions update at', datetime.now(), '- There were', orders_inserted, 'orders and', positions_inserted, 'positions\n')
+  print('  Finished updating orders and positions at', datetime.now(), '- There were', orders_inserted, 'orders and', positions_inserted, 'positions\n')
