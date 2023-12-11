@@ -87,12 +87,13 @@ def init_db():
           state,
           fill_qty,
           fill_price,
+          last_update,
           FOREIGN KEY (strategy_name) REFERENCES strategies (strategy_name)
         );
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS positions
-        (br_id PRIMARY KEY, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price);
+        (br_id PRIMARY KEY, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update);
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS strategies
@@ -120,7 +121,7 @@ def init_db():
       ''')
     c.execute('''
         CREATE TABLE IF NOT EXISTS connection_events
-        (id PRIMARY KEY, ts, type, connected);
+        (id PRIMARY KEY, ts, type, connected, last_updated);
       ''')
     conn.commit()
   finally:

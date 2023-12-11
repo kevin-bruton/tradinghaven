@@ -20,7 +20,7 @@ cron_thread = Thread(target=run_cron, daemon=True)
 api_server_thread = Thread(target=run_api_server, daemon=True)
 
 api_server_thread.start()
-sleep(1)
+sleep(5)
 cron_thread.start()
 
 try:

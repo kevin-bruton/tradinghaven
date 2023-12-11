@@ -1,16 +1,19 @@
 import os
 from datetime import datetime
-from db.orders import save_orders
+from db.orders import save_orders, get_order
 from db.positions import save_positions
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
 from utils.telegram import sendMessage
 
-orders = []
-positions = []
-last_filled_order = None
-last_logfile_modification = None
-last_read_log_entry_ts = None
+#orders = []
+#positions = []
+#last_filled_order = None
+#last_logfile_modification = None
+#last_read_log_entry_ts = None
+
+def ts_to_str(ts):
+  return datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
 
 def sendPositionMessage(position):
   enabled = get_config_value('send_position_messages')
@@ -50,7 +53,10 @@ def get_key_value(content, key):
   return content[value_idx:value_end_idx]
 
 def get_strategy_and_order_name(ref):
-  return ref[2:-1].split('_')
+  parts = ref[2:-1].split('_')
+  if len(parts) == 2:
+    return parts
+  return ['Not_Specified', parts[0]]
 
 def is_strategy_order(content):
   columns = content.split(';')
@@ -59,12 +65,14 @@ def is_strategy_order(content):
     and columns[2][:1] == '{'
 
 def process_strategy_order(content):
-  global last_filled_order
   columns = content.split(';')
   strategy_name, order_name = get_strategy_and_order_name(columns[2])
   state = get_strat_state(columns[5])
   br_id = int(columns[3])
   br_id_str = columns[14][1:-1]
+  saved_order = get_order(br_id)
+  print('saved_order', saved_order)
+  '''
   found_orders = [o for o in orders if o['br_id'] == br_id]
   if len(found_orders) == 0:
     orders.append({ 'br_id': br_id })
@@ -81,6 +89,7 @@ def process_strategy_order(content):
   order['broker_profile'] = columns[47][1:-1]
   if state == 'Filled':
     last_filled_order = br_id
+  '''
   
 def is_onorder_event(content):
   columns = content.split(' ')
@@ -156,61 +165,7 @@ def process_set_position(content):
   positions.append(order)
   sendPositionMessage(order)
 
-def save_orders_table():
-  with open('orders.csv', 'w') as f:
-    f.write('br_id,br_id_str,strategy_name,order_name,account,symbol,exchange,contract,broker_profile,strat_state,opl,realized_pl,generated,final,action,order_type,qty,price,state,fill_qty,fill_price\n')
-    for order in orders:
-      f.write(str(order.get('br_id', '')) + ',')
-      f.write(order.get('br_id_str', '') + ',')
-      f.write(order.get('strategy_name', '') + ',')
-      f.write(order.get('order_name', '') + ',')
-      f.write(order.get('account', '') + ',')
-      f.write(order.get('symbol', '') + ',')
-      f.write(order.get('exchange', '') + ',')
-      f.write(order.get('contract', '') + ',')
-      f.write(order.get('broker_profile', '') + ',')
-      f.write(order.get('strat_state', '') + ',')
-      f.write(str(order.get('opl', '')) + ',')
-      f.write(str(order.get('realized_pl', '')) + ',')
-      f.write(order.get('generated', '') + ',')
-      f.write(order.get('final', '') + ',')
-      f.write(order.get('action', '') + ',')
-      f.write(order.get('order_type', '') + ',')
-      f.write(str(order.get('qty', '')) + ',')
-      f.write(str(order.get('price', '')) + ',')
-      f.write(order.get('state', '') + ',')
-      f.write(str(order.get('fill_qty', '')) + ',')
-      f.write(str(order.get('fill_price', '')) + '\n')
-
-def save_positions_table():
-  with open('positions.csv', 'w') as f:
-    f.write('br_id,br_id_str,strategy_name,order_name,account,symbol,exchange,contract,broker_profile,strat_state,opl,realized_pl,generated,final,action,order_type,qty,price,state,fill_qty,fill_price\n')
-    for positions in positions:
-      f.write(str(positions.get('br_id', '')) + ',')
-      f.write(positions.get('br_id_str', '') + ',')
-      f.write(positions.get('strategy_name', '') + ',')
-      f.write(positions.get('order_name', '') + ',')
-      f.write(positions.get('account', '') + ',')
-      f.write(positions.get('symbol', '') + ',')
-      f.write(positions.get('exchange', '') + ',')
-      f.write(positions.get('contract', '') + ',')
-      f.write(positions.get('broker_profile', '') + ',')
-      f.write(positions.get('strat_state', '') + ',')
-      f.write(str(positions.get('opl', '')) + ',')
-      f.write(str(positions.get('realized_pl', '')) + ',')
-      f.write(positions.get('generated', '') + ',')
-      f.write(positions.get('final', '') + ',')
-      f.write(positions.get('action', '') + ',')
-      f.write(positions.get('order_type', '') + ',')
-      f.write(str(positions.get('qty', '')) + ',')
-      f.write(str(positions.get('price', '')) + ',')
-      f.write(positions.get('state', '') + ',')
-      f.write(str(positions.get('fill_qty', '')) + ',')
-      f.write(str(positions.get('fill_price', '')) + '\n')
-
-def get_latest_orders():
-  global last_logfile_modification
-  global last_read_log_entry_ts
+def get_logfilepath_modified():
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
   logfiles = [f for f in os.listdir(logdir) if f.startswith('TradingServer')]
   if len(logfiles) == 0:
@@ -224,55 +179,62 @@ def get_latest_orders():
     if t_modified > last_modified:
       last_modified = t_modified
       logfile = logf
+  return [logdir + logfile, last_modified]
 
-  # Only start reading the log file if it has been modified since the last read
-  if last_logfile_modification == None:
-    last_logfile_modification = get_timestamp('last_trading_server_logfile_modification')
-    if last_logfile_modification == None:
-      last_logfile_modification = 0
-  if last_modified <= last_logfile_modification:
+def logfile_not_modified_since_last_read(logfile_modified_ts):
+  last_read = get_timestamp('last_trading_server_logfile_modification')
+  if last_read == None:
+    last_read = 0
+  if last_read == logfile_modified_ts:
     # print('Log file not modified since last read')
-    return
-  save_timestamp(last_modified, 'last_trading_server_logfile_modification')
-  last_logfile_modification = last_modified
+    return True
+  save_timestamp(logfile_modified_ts, 'last_trading_server_logfile_modification')
+  return False
 
-  # Get the last read log entry timestamp
-  if last_read_log_entry_ts == None:
-    last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
+def logentry_already_processed(logentry_ts, last_read_log_entry_ts):
+  return last_read_log_entry_ts and logentry_ts < last_read_log_entry_ts
+
+def get_logentry_ts_and_content(line):
+  content_idx = line.find(' ')
+  if content_idx == -1:
+    return [None, None]
+  line_split = line[:content_idx].split('-')
+  if len(line_split) >= 3 and len(line_split[2]) == 23: 
+    content = line[content_idx+1:].strip()
+    log_ts = logtime_to_ts(line_split[2])
+    return [log_ts, content]
+  return [None, None]
+
+def get_latest_orders():
+  logfile, logfile_modified_ts = get_logfilepath_modified()
+  if logfile_not_modified_since_last_read(logfile_modified_ts):
+    return
+
+  last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
   
   # Read log entries
-  with open(logdir + logfile, 'r') as f:
+  print('Reading log entries..', datetime.now())
+  with open(logfile, 'r') as f:
     for line in f:
-      content_idx = line.find(' ')
-      if content_idx == -1:
+      logentry_ts, content = get_logentry_ts_and_content(line)
+      if logentry_ts == None or content == None:
         continue
 
-      # Only process log entries that are after the last read log entry
-      line_split = line[:content_idx].split('-')
-      if len(line_split) >= 3 and len(line_split[2]) == 23: 
-        current_log_entry_timestamp = logtime_to_ts(line_split[2])
-      else:
+      if logentry_already_processed(logentry_ts, last_read_log_entry_ts):
         continue
 
-      if last_read_log_entry_ts and current_log_entry_timestamp < last_read_log_entry_ts:
-        #print('already read this log entry', last_read_log_entry_ts, current_log_entry_timestamp)
-        continue
-      #print('New log entry:', last_read_log_entry_ts, current_log_entry_timestamp)
-      last_read_log_entry_ts = current_log_entry_timestamp
-      save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
-
-      content = line[content_idx+1:].strip()
+      print('Log entry: ', ts_to_str(logentry_ts))
       if is_strategy_order(content):
         process_strategy_order(content)
-      elif is_onorder_event(content):
+      '''elif is_onorder_event(content):
         process_onorder_event(content)
       elif is_popactiveorder_event(content):
         process_popactiveorder_event(content)
       elif is_set_position(content):
         process_set_position(content)
+      '''
+      save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
 
-  # save_orders_table()
-  # save_positions_table()
-  orders_inserted = save_orders(orders)
-  positions_inserted = save_positions(positions)
-  print('Saved', orders_inserted, 'orders and', positions_inserted, 'positions')
+  #orders_inserted = save_orders(orders)
+  #positions_inserted = save_positions(positions)
+  #print('Saved', orders_inserted, 'orders and', positions_inserted, 'positions')

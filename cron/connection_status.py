@@ -108,7 +108,7 @@ def get_connection_status():
     if last_logfile_modification == None:
       last_logfile_modification = 0
   if last_modified <= last_logfile_modification:
-    print('TWS log file not modified since last read')
+    print('  TWS log file not modified since last read')
     return
   save_timestamp(last_modified, 'last_tws_logfile_modification')
   last_logfile_modification = last_modified
@@ -155,4 +155,4 @@ def get_connection_status():
         process_data_disconnected_event(current_log_entry_timestamp)
 
   num_inserted_connection_events = save_connection_events(connection_events)
-  print('Saved', num_inserted_connection_events, 'connection events')
+  print('  Saved', num_inserted_connection_events, 'connection events')

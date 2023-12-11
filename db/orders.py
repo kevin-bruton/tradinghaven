@@ -1,4 +1,10 @@
-from .common import mutate_many
+from .common import mutate_many, query_one
+
+def get_order(br_id):
+  sql = '''
+      SELECT * FROM orders WHERE br_id = ?
+    '''
+  return query_one(sql, (br_id,))
 
 def save_orders(orders: list[dict]):
   values = [(
