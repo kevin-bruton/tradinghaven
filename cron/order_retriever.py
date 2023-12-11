@@ -1,14 +1,14 @@
 import os
 from datetime import datetime
-from db.orders import save_orders, get_order
+from db.orders import get_last_filled_order_id, save_orders, get_order
 from db.positions import save_positions
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
 from utils.telegram import sendMessage
 
-#orders = []
-#positions = []
-#last_filled_order = None
+orders = []
+positions = []
+last_filled_order_id = None
 #last_logfile_modification = None
 #last_read_log_entry_ts = None
 
@@ -53,7 +53,7 @@ def get_key_value(content, key):
   return content[value_idx:value_end_idx]
 
 def get_strategy_and_order_name(ref):
-  parts = ref[2:-1].split('_')
+  parts = ref[2:-1].split(':')
   if len(parts) == 2:
     return parts
   return ['Not_Specified', parts[0]]
@@ -64,15 +64,13 @@ def is_strategy_order(content):
     and '@' not in columns[2] \
     and columns[2][:1] == '{'
 
-def process_strategy_order(content):
+def process_strategy_order(logentry_ts, content):
+  global last_filled_order_id
   columns = content.split(';')
   strategy_name, order_name = get_strategy_and_order_name(columns[2])
   state = get_strat_state(columns[5])
   br_id = int(columns[3])
   br_id_str = columns[14][1:-1]
-  saved_order = get_order(br_id)
-  print('saved_order', saved_order)
-  '''
   found_orders = [o for o in orders if o['br_id'] == br_id]
   if len(found_orders) == 0:
     orders.append({ 'br_id': br_id })
@@ -87,17 +85,17 @@ def process_strategy_order(content):
   order['exchange'] = columns[19][1:-1]
   order['contract'] = columns[31][2:-1]
   order['broker_profile'] = columns[47][1:-1]
+  order['last_update'] = logentry_ts
   if state == 'Filled':
-    last_filled_order = br_id
-  '''
+    last_filled_order_id = br_id
   
 def is_onorder_event(content):
   columns = content.split(' ')
   return len(columns) > 0 \
     and columns[0] == 'CProfile::OnOrder'
 
-def process_onorder_event(content):
-  global last_filled_order
+def process_onorder_event(logentry_ts, content):
+  global last_filled_order_id
   columns = content.split(';')
   br_id = int(columns[3].split('=')[1])
   found_orders = [o for o in orders if o['br_id'] == br_id]
@@ -115,16 +113,17 @@ def process_onorder_event(content):
   order['state'] = get_key_value(content, 'State')
   order['fill_qty'] = int(get_key_value(content, 'FillQty'))
   order['fill_price'] = float(get_key_value(content, 'FillPrice'))
+  order['last_update'] = logentry_ts
   if order['state'] == 'Filled':
-    last_filled_order = br_id
+    last_filled_order_id = br_id
 
 def is_popactiveorder_event(content):
   columns = content.split(' ')
   return len(columns) > 0 \
     and columns[0] == 'CPositionMonitor::PopActiveOrder'
 
-def process_popactiveorder_event(content):
-  global last_filled_order
+def process_popactiveorder_event(logentry_ts, content):
+  global last_filled_order_id
   columns = content.split(';')
   br_id = int(columns[3].split('=')[1])
   found_orders = [o for o in orders if o['br_id'] == br_id]
@@ -142,26 +141,28 @@ def process_popactiveorder_event(content):
   order['state'] = get_key_value(content, 'State')
   order['fill_qty'] = int(get_key_value(content, 'FillQty'))
   order['fill_price'] = float(get_key_value(content, 'FillPrice'))
+  order['last_update'] = logentry_ts
   if order['state'] == 'Filled':
-    last_filled_order = br_id
+    last_filled_order_id = br_id
   
 def is_set_position(content):
   columns = content.split(' ')
   return len(columns) > 0 and columns[0] == 'CPositionMonitor::SetPosition'
 
-def process_set_position(content):
-  global last_filled_order
-  if last_filled_order == None:
+def process_set_position(logentry_ts, content):
+  global last_filled_order_id
+  if last_filled_order_id == None:
     raise Exception('No filled order found')
   columns = content.split(' ')
-  found_orders = [o for o in orders if o['br_id'] == last_filled_order]
+  found_orders = [o for o in orders if o['br_id'] == last_filled_order_id]
   if len(found_orders) == 0:
-    orders.append({ 'br_id': last_filled_order })
-    found_orders = [o for o in orders if o['br_id'] == last_filled_order]
+    orders.append({ 'br_id': last_filled_order_id })
+    found_orders = [o for o in orders if o['br_id'] == last_filled_order_id]
   order = found_orders[0]
   order['opl'] = float(columns[6].split('=')[1][:-1])
   order['opl_orig'] = float(columns[7].split('=')[1][:-1])
   order['realized_pl'] = float(columns[8].split('=')[1][:-1])
+  order['last_update'] = logentry_ts
   positions.append(order)
   sendPositionMessage(order)
 
@@ -206,14 +207,17 @@ def get_logentry_ts_and_content(line):
   return [None, None]
 
 def get_latest_orders():
+  global last_filled_order_id
   logfile, logfile_modified_ts = get_logfilepath_modified()
   if logfile_not_modified_since_last_read(logfile_modified_ts):
     return
 
   last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
+
+  last_filled_order_id = get_last_filled_order_id()
   
   # Read log entries
-  print('Reading log entries..', datetime.now())
+  print('Updating orders and positions at', datetime.now(), '...')
   with open(logfile, 'r') as f:
     for line in f:
       logentry_ts, content = get_logentry_ts_and_content(line)
@@ -223,18 +227,22 @@ def get_latest_orders():
       if logentry_already_processed(logentry_ts, last_read_log_entry_ts):
         continue
 
-      print('Log entry: ', ts_to_str(logentry_ts))
+      #print(ts_to_str(logentry_ts)[:16], ts_to_str(last_read_log_entry_ts)[:16])
+      if ts_to_str(logentry_ts)[:13] != ts_to_str(last_read_log_entry_ts)[:13]:
+        print('  Reading log entries at hour: ', ts_to_str(logentry_ts)[:13])
       if is_strategy_order(content):
-        process_strategy_order(content)
-      '''elif is_onorder_event(content):
-        process_onorder_event(content)
+        process_strategy_order(logentry_ts, content)
+      elif is_onorder_event(content):
+        process_onorder_event(logentry_ts, content)
       elif is_popactiveorder_event(content):
-        process_popactiveorder_event(content)
+        process_popactiveorder_event(logentry_ts, content)
       elif is_set_position(content):
-        process_set_position(content)
-      '''
-      save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
+        process_set_position(logentry_ts, content)
 
-  #orders_inserted = save_orders(orders)
-  #positions_inserted = save_positions(positions)
-  #print('Saved', orders_inserted, 'orders and', positions_inserted, 'positions')
+      last_read_log_entry_ts = logentry_ts
+
+  save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
+
+  orders_inserted = save_orders(orders)
+  positions_inserted = save_positions(positions)
+  print('  Orders and positions update at', datetime.now(), '- There were', orders_inserted, 'orders and', positions_inserted, 'positions\n')

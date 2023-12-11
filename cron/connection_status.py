@@ -117,6 +117,7 @@ def get_connection_status():
   if last_read_log_entry_ts == None:
     last_read_log_entry_ts = get_timestamp('last_tws_log_read')
   
+  print('Updating connection status at', datetime.now(), '...')
   # Read log entries
   with open(logdir + logfile, 'r') as f:
   # with open('C:/Users/Admin/repo/trading-haven/cron/TWSTradingPlugin_874C_34636_Trace.txt', 'r') as f:
@@ -155,4 +156,4 @@ def get_connection_status():
         process_data_disconnected_event(current_log_entry_timestamp)
 
   num_inserted_connection_events = save_connection_events(connection_events)
-  print('  Saved', num_inserted_connection_events, 'connection events')
+  print('  Saved', num_inserted_connection_events, 'connection events\n')

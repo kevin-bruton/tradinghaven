@@ -30,7 +30,7 @@ def mutate_many(sql, values: list[tuple]):
     conn.close()
   return rows_affected
 
-def query_one(sql, values):
+def query_one(sql, values=()):
   conn = sqlite3.connect(db_path)
   try:
     c = conn.cursor()

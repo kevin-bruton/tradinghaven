@@ -22,11 +22,12 @@ def save_positions(positions: list[dict]):
       p['price'],
       p['state'],
       p['fill_qty'],
-      p['fill_price']
+      p['fill_price'],
+      p['last_update']
   ) for p in positions]
   sql = '''
     INSERT OR IGNORE INTO positions
-      (br_id, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price)
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (br_id, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   return mutate_many(sql, values)

@@ -6,6 +6,13 @@ def get_order(br_id):
     '''
   return query_one(sql, (br_id,))
 
+def get_last_filled_order_id():
+  sql = '''
+      SELECT br_id, MAX(last_update)
+      FROM orders
+    '''
+  return query_one(sql)
+
 def save_orders(orders: list[dict]):
   values = [(
       o['br_id'],
@@ -18,8 +25,8 @@ def save_orders(orders: list[dict]):
       o['contract'],
       o['broker_profile'],
       o['strat_state'],
-      o['opl'],
-      o['realized_pl'],
+      o['opl'] if 'opl' in o else None,
+      o['realized_pl'] if 'realized_pl' in o else None,
       o['generated'],
       o['final'],
       o['action'],
@@ -28,7 +35,8 @@ def save_orders(orders: list[dict]):
       o['price'],
       o['state'],
       o['fill_qty'],
-      o['fill_price']
+      o['fill_price'],
+      o['last_update']
     ) for o in orders]
   sql = '''
     INSERT OR REPLACE INTO orders
@@ -53,8 +61,9 @@ def save_orders(orders: list[dict]):
         price,
         state,
         fill_qty,
-        fill_price
+        fill_price,
+        last_update
       )
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   return mutate_many(sql, values)

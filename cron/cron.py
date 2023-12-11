@@ -5,11 +5,9 @@ from .connection_status import get_connection_status
 from utils.config import get_config_value, freq_str_to_secs
 
 def run_cron():
-  print('\nUpdate DB with connection status history...')
   get_connection_status()
-  print('  Done!\nUpdate DB with orders and positions history...')
   get_latest_orders()
-  print('  Done!')
+  print('Initial synchronisation completed!\n')
   conn_freq = freq_str_to_secs(get_config_value('connection_update_frequency'))
   orders_freq = freq_str_to_secs(get_config_value('orders_update_frequency'))
 
