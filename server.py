@@ -3,6 +3,7 @@ print('                TRADING HAVEN SERVER                 ')
 print('#####################################################\n')
 
 from os import path
+from sys import exit
 
 root_dir = path.abspath(path.dirname(__file__))
 from utils.config import load_config

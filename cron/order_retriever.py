@@ -163,9 +163,9 @@ def process_set_position(logentry_ts, content):
   order['opl_orig'] = float(columns[7].split('=')[1][:-1])
   order['realized_pl'] = float(columns[8].split('=')[1][:-1])
   order['last_update'] = logentry_ts
-  if order['state'] == 'Filled':
-    positions.append(order)
-    sendPositionMessage(order)
+  #if order['state'] == 'Filled':
+  positions.append(order)
+  sendPositionMessage(order)
 
 def get_logfilepath_modified():
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
