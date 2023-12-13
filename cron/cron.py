@@ -3,6 +3,7 @@ import time
 from .order_retriever import get_latest_orders
 from .connection_status import get_connection_status
 from utils.config import get_config_value, freq_str_to_secs
+from utils.telegram import send_message
 
 def run_cron():
   get_connection_status()

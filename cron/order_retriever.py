@@ -4,7 +4,7 @@ from db.orders import get_last_filled_order_id, save_orders, get_order
 from db.positions import save_positions
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
-from utils.telegram import sendMessage
+from utils.telegram import send_message
 
 orders = []
 positions = []
@@ -19,7 +19,8 @@ def sendPositionMessage(position):
   enabled = get_config_value('send_position_messages')
   if enabled:
     message = f"""Position change:  
-    Strategy: {position['strategy_name']} {position['order_name']}  
+    Strategy: {position['strategy_name']}  
+    Order name: {position['order_name']}  
     Account: {position['account']}  
     Symbol: {position['symbol']} {position['contract']}  
     Qty: {position['qty']}  
@@ -34,7 +35,7 @@ def sendPositionMessage(position):
     Fill Qty: {position['fill_qty']}  
     Fill Price: {position['fill_price']}  
     """
-    sendMessage(message)
+    send_message(message)
 
 def logtime_to_ts(str):
   return datetime.strptime(str, '%d.%m.%Y/%H:%M:%S.%f').timestamp()
@@ -67,6 +68,8 @@ def is_strategy_order(content):
 def process_strategy_order(logentry_ts, content):
   global last_filled_order_id
   columns = content.split(';')
+  if len(columns) < 48:
+    return
   strategy_name, order_name = get_strategy_and_order_name(columns[2])
   state = get_strat_state(columns[5])
   br_id = int(columns[3])
@@ -83,7 +86,7 @@ def process_strategy_order(logentry_ts, content):
   order['account'] = columns[15][2:-1]
   order['symbol'] = columns[17][1:-1]
   order['exchange'] = columns[19][1:-1]
-  order['contract'] = columns[31][2:-1]
+  order['contract'] = columns[31][2:-1] if len(columns) > 31 else ''
   order['broker_profile'] = columns[47][1:-1]
   order['last_update'] = logentry_ts
   if state == 'Filled':

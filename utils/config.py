@@ -1,6 +1,8 @@
 import json
 from os import path
 
+config = {}
+
 default_config = {
   "database_directory": ".",
   "multicharts_data_directory": ".",
@@ -23,8 +25,11 @@ def load_config(root_dir):
     with open(config_file, "r") as file:
       config = json.load(file)
   config['root_dir'] = root_dir
+  print('\nLoaded config:')
+  print(json.dumps(config, indent=2) + '\n')
 
 def get_config_value(key):
+  global config
   return config[key]
 
 def freq_str_to_secs(freq):
