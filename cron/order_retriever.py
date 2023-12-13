@@ -16,24 +16,26 @@ def ts_to_str(ts):
   return datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
 
 def sendPositionMessage(position):
+  def pos_get(key):
+    return position[key] if key in position else 'N/A'
   enabled = get_config_value('send_position_messages')
   if enabled:
     message = f"""Position change:  
-    Strategy: {position['strategy_name']}  
-    Order name: {position['order_name']}  
-    Account: {position['account']}  
-    Symbol: {position['symbol']} {position['contract']}  
-    Qty: {position['qty']}  
-    Price: {position['price']}  
-    OPL: {position['opl']}  
-    Realized P/L: {position['realized_pl']}   
-    Generated: {position['generated']}    
-    Final: {position['final']}    
-    Action: {position['action']}    
-    Order Type: {position['order_type']}    
-    State: {position['state']}    
-    Fill Qty: {position['fill_qty']}  
-    Fill Price: {position['fill_price']}  
+    Strategy: {pos_get('strategy_name')}  
+    Order name: {pos_get('order_name')}  
+    Account: {pos_get('account')}  
+    Symbol: {pos_get('symbol')} {pos_get('contract')}  
+    Qty: {pos_get('qty')}  
+    Price: {pos_get('price')}  
+    Generated: {pos_get('generated')}    
+    Final: {pos_get('final')}    
+    Action: {pos_get('action')}    
+    Order Type: {pos_get('order_type')}    
+    State: {pos_get('state')}    
+    Fill Qty: {pos_get('fill_qty')}  
+    Fill Price: {pos_get('fill_price')}  
+    OPL: {pos_get('opl')}  
+    Realized P/L: {pos_get('realized_pl')}   
     """
     send_message(message)
 
