@@ -9,6 +9,7 @@ from utils.telegram import send_message
 orders = []
 positions = []
 last_filled_order_id = None
+strategy_ids = []
 #last_logfile_modification = None
 #last_read_log_entry_ts = None
 
@@ -55,24 +56,35 @@ def get_key_value(content, key):
   value_end_idx = content.find(';', value_idx)
   return content[value_idx:value_end_idx]
 
-def get_strategy_and_order_name(ref):
-  parts = ref[2:-1].split(':')
-  if len(parts) == 2:
-    return parts
-  return ['Not_Specified', parts[0]]
+def is_strategy_identifier(content):
+  columns = content.split(';')
+  return len(columns) > 50 \
+    and '@' in columns[2] \
+    and columns[2][1] == '{'
+
+def process_strategy_identifier(logentry_ts, content):
+  global strategy_ids
+  columns = content.split(';')
+  trader_id = columns[1]
+  strategy_name = columns[44]
+  strategy_ids.append([trader_id, strategy_name])
+
+def get_auto_strategy_name(trader_id):
+  global strategy_ids
+  found = [s[1] for s in strategy_ids if strategy_ids[0] == trader_id]
+  if len(found):
+    return found[1]
+  return 'Not found'
 
 def is_strategy_order(content):
   columns = content.split(';')
-  return len(columns) > 3 \
+  return len(columns) > 50 \
     and '@' not in columns[2] \
     and columns[2][:1] == '{'
 
 def process_strategy_order(logentry_ts, content):
   global last_filled_order_id
   columns = content.split(';')
-  if len(columns) < 48:
-    return
-  strategy_name, order_name = get_strategy_and_order_name(columns[2])
   state = get_strat_state(columns[5])
   br_id = int(columns[3])
   br_id_str = columns[14][1:-1]
@@ -83,14 +95,18 @@ def process_strategy_order(logentry_ts, content):
   order = found_orders[0]
   order['strat_state'] = state
   order['br_id_str'] = br_id_str
-  order['strategy_name'] = strategy_name
-  order['order_name'] = order_name
+  # order['trader_id'] = int(columns[4])
+  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
+  order['order_name'] = columns[2][2:-1]
   order['account'] = columns[15][2:-1]
   order['symbol'] = columns[17][1:-1]
   order['exchange'] = columns[19][1:-1]
   order['contract'] = columns[31][2:-1] if len(columns) > 31 else ''
   order['broker_profile'] = columns[47][1:-1]
   order['last_update'] = logentry_ts
+  #print('STRAT ORDER')
+  #print('  CONTENT:', content)
+  #print('  ORDER:', order)
   if state == 'Filled':
     last_filled_order_id = br_id
   
@@ -109,6 +125,8 @@ def process_onorder_event(logentry_ts, content):
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
+  order['trader_id'] = get_key_value(content, 'ELTraderID')
+  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -137,6 +155,8 @@ def process_popactiveorder_event(logentry_ts, content):
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
+  order['trader_id'] = get_key_value(content, 'ELTraderID')
+  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -157,7 +177,8 @@ def is_set_position(content):
 def process_set_position(logentry_ts, content):
   global last_filled_order_id
   if last_filled_order_id == None:
-    raise Exception('No filled order found')
+    print('No last filled order id. Can\'t associate this position with an order:', content)
+    return
   columns = content.split(' ')
   found_orders = [o for o in orders if o['br_id'] == last_filled_order_id]
   if len(found_orders) == 0:
@@ -193,7 +214,7 @@ def logfile_not_modified_since_last_read(logfile_modified_ts):
   if last_read == None:
     last_read = 0
   if last_read == logfile_modified_ts:
-    # print('Log file not modified since last read')
+    print('  No updates since last check')
     return True
   save_timestamp(logfile_modified_ts, 'last_trading_server_logfile_modification')
   return False
@@ -214,8 +235,13 @@ def get_logentry_ts_and_content(line):
 
 def get_latest_orders():
   global last_filled_order_id
-  logfile, logfile_modified_ts = get_logfilepath_modified()
+  try:
+    logfile, logfile_modified_ts = get_logfilepath_modified()
+  except:
+    print('Error: could not read from TradingServer')
+    return
   if logfile_not_modified_since_last_read(logfile_modified_ts):
+    print('No TradingServer updates since last check')
     return
 
   last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
@@ -236,6 +262,9 @@ def get_latest_orders():
       #print(ts_to_str(logentry_ts)[:16], ts_to_str(last_read_log_entry_ts)[:16])
       if ts_to_str(logentry_ts)[:13] != ts_to_str(last_read_log_entry_ts)[:13]:
         print('  Reading log entries at hour: ', ts_to_str(logentry_ts)[:13])
+      
+      if is_strategy_identifier(content):
+        process_strategy_identifier(logentry_ts, content)
       if is_strategy_order(content):
         process_strategy_order(logentry_ts, content)
       elif is_onorder_event(content):

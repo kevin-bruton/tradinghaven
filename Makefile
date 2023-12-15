@@ -1,6 +1,6 @@
 # Package the project for distribution
 
-all: clean package
+all: clean package deploy
 
 clean:
 	rm -rf ./dist
@@ -15,6 +15,13 @@ package:
 		--icon=./stock.ico \
 		server.py
 	cp ./config-default.json ./dist/TradingHaven\_internal/config.json
+
+deploy:
+	rm -rf C:/TradingHaven/_internal/
+	rm C:/TradingHaven/TradingHaven.exe
+	cp -r ./dist/TradingHaven/_internal/ C:/TradingHaven/
+	cp ./dist/TradingHaven/TradingHaven.exe C:/TradingHaven/
+	cp C:/TradingHaven/config.json C:/TradingHaven/_internal/
 
 config:
 	cp ./config.json ./dist/TradingHaven\_internal/config.json

@@ -68,6 +68,8 @@ def init_db():
         (
           br_id PRIMARY KEY,
           br_id_str,
+          trader_id,
+          auto_strat_name,
           strategy_name,
           order_name,
           account,
@@ -93,7 +95,7 @@ def init_db():
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS positions
-        (br_id PRIMARY KEY, br_id_str, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update);
+        (br_id PRIMARY KEY, br_id_str, trader_id, auto_strat_name, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update);
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS strategies

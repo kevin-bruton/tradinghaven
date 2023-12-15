@@ -11,23 +11,28 @@ def get_last_filled_order_id():
       SELECT br_id, MAX(last_update)
       FROM orders
     '''
-  return query_one(sql)
+  result = query_one(sql)
+  if len(result):
+    return result[0]
+  return None
 
 def save_orders(orders: list[dict]):
   values = [(
       o['br_id'],
-      o['br_id_str'],
-      o['strategy_name'],
-      o['order_name'],
-      o['account'],
-      o['symbol'],
-      o['exchange'],
-      o['contract'],
-      o['broker_profile'],
+      o['br_id_str'] if 'br_id_str' in o else None,
+      o['trader_id'] if 'trader_id' in o else None,
+      o['auto_strat_name'] if 'auto_strat_name' in o else None,
+      o['strategy_name'] if 'strategy_name' in o else None,
+      o['order_name'] if 'order_name' in o else None,
+      o['account'] if 'account' in o else None,
+      o['symbol'] if 'symbol' in o else None,
+      o['exchange'] if 'exchange' in o else None,
+      o['contract'] if 'contract' in o else None,
+      o['broker_profile'] if 'broker_profile' in o else None,
       o['strat_state'] if 'strat_state' in o else None,
       o['opl'] if 'opl' in o else None,
       o['realized_pl'] if 'realized_pl' in o else None,
-      o['generated'] if 'geerated' in o else None,
+      o['generated'] if 'generated' in o else None,
       o['final'] if 'final' in o else None,
       o['action'] if 'action' in o else None,
       o['order_type'] if 'order_type' in o else None,
@@ -43,6 +48,8 @@ def save_orders(orders: list[dict]):
       (
         br_id,
         br_id_str,
+        trader_id,
+        auto_strat_name,
         strategy_name,
         order_name,
         account,
@@ -64,6 +71,12 @@ def save_orders(orders: list[dict]):
         fill_price,
         last_update
       )
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
-  return mutate_many(sql, values)
+  try:
+    return mutate_many(sql, values)
+  except Exception as e:
+    print('Error trying to save orders:')
+    for order in orders:
+      print(order)
+  return False

@@ -30,7 +30,11 @@ def load_config(root_dir):
 
 def get_config_value(key):
   global config
-  return config[key]
+  if key in config:
+    return config[key]
+  elif key == 'enable_openapi_docs':
+    return False
+  return default_config[key]
 
 def freq_str_to_secs(freq):
   freq, units = freq.split('_')
