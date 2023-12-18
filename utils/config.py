@@ -38,6 +38,8 @@ def get_config_value(key):
     return False
   elif key == 'enable_cron':
     return False
+  elif key == 'dev_logfiles':
+    return False
   return default_config[key]
 
 def freq_str_to_secs(freq):

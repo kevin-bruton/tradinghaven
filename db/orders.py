@@ -19,6 +19,7 @@ def save_orders(orders: list[dict]):
       o['br_id'],
       o['br_id_str'] if 'br_id_str' in o else None,
       o['trader_id'] if 'trader_id' in o else None,
+      o['el_trader_id'] if 'el_trader_id' in o else None,
       o['strategy_name'] if 'strategy_name' in o else None,
       o['order_name'] if 'order_name' in o else None,
       o['account'] if 'account' in o else None,
@@ -26,7 +27,6 @@ def save_orders(orders: list[dict]):
       o['exchange'] if 'exchange' in o else None,
       o['contract'] if 'contract' in o else None,
       o['broker_profile'] if 'broker_profile' in o else None,
-      o['strat_state'] if 'strat_state' in o else None,
       o['opl'] if 'opl' in o else None,
       o['realized_pl'] if 'realized_pl' in o else None,
       o['generated'] if 'generated' in o else None,
@@ -54,7 +54,6 @@ def save_orders(orders: list[dict]):
         exchange,
         contract,
         broker_profile,
-        strat_state,
         opl,
         realized_pl,
         generated,
@@ -68,10 +67,11 @@ def save_orders(orders: list[dict]):
         fill_price,
         last_update
       )
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   try:
     result = mutate_many(sql, values)
+    return result
   except Exception as e:
     print('  *** Error trying to save orders:', e)
     for order in orders:
