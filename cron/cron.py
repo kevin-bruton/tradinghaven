@@ -6,9 +6,15 @@ from utils.config import get_config_value, freq_str_to_secs
 from utils.telegram import send_message
 
 def run_cron():
+  enable_cron = get_config_value('enable_cron')
+  
   get_connection_status()
   get_latest_orders()
   print('Initial synchronisation completed!\n')
+  
+  if not enable_cron:
+    return
+  
   conn_freq = freq_str_to_secs(get_config_value('connection_update_frequency'))
   orders_freq = freq_str_to_secs(get_config_value('orders_update_frequency'))
 

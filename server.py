@@ -6,8 +6,9 @@ from os import path
 from sys import exit
 
 root_dir = path.abspath(path.dirname(__file__))
-from utils.config import load_config
+from utils.config import load_config, get_config_value
 load_config(root_dir)
+enable_api = get_config_value('enable_api')
 
 from time import sleep
 from threading import Thread
@@ -18,16 +19,17 @@ from db.common import init_db
 init_db()
 
 cron_thread = Thread(target=run_cron, daemon=True)
-api_server_thread = Thread(target=run_api_server, daemon=True)
-
-api_server_thread.start()
-sleep(5)
+if enable_api:
+  api_server_thread = Thread(target=run_api_server, daemon=True)
+  api_server_thread.start()
+  sleep(5)
 cron_thread.start()
 
 try:
-    while cron_thread.is_alive() or api_server_thread.is_alive():
-        cron_thread.join(1)
-        api_server_thread.join(1)
+  while cron_thread.is_alive() or (enable_api and api_server_thread.is_alive()):
+    cron_thread.join(1)
+    if enable_api:
+      api_server_thread.join(1)
 finally:
-    print('\n\nThe Trading Haven Server has stopped!\n')
-    exit(0)
+  print('\n\nThe Trading Haven Server has stopped!\n')
+  exit(0)

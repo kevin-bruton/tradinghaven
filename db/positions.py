@@ -4,8 +4,8 @@ def save_positions(positions: list[dict]):
   values = [(
       p['br_id'],
       p['br_id_str'] if 'br_id_str' in p else None,
+      p['el_trader_id'] if 'el_trader_id' in p else None,
       p['trader_id'] if 'trader_id' in p else None,
-      p['auto_strat_name'] if 'auto_strat_name' in p else None,
       p['strategy_name'] if 'strategy_name' in p else None,
       p['order_name'] if 'order_name' in p else None,
       p['account'] if 'account' in p else None,
@@ -29,7 +29,7 @@ def save_positions(positions: list[dict]):
   ) for p in positions]
   sql = '''
     INSERT OR IGNORE INTO positions
-      (br_id, br_id_str, trader_id, auto_strat_name, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update)
+      (br_id, br_id_str, el_trader_id, trader_id, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update)
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   return mutate_many(sql, values)

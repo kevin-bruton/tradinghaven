@@ -68,8 +68,8 @@ def init_db():
         (
           br_id PRIMARY KEY,
           br_id_str,
+          el_trader_id,
           trader_id,
-          auto_strat_name,
           strategy_name,
           order_name,
           account,
@@ -90,16 +90,42 @@ def init_db():
           fill_qty,
           fill_price,
           last_update,
-          FOREIGN KEY (strategy_name) REFERENCES strategies (strategy_name)
+          FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
         );
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS positions
-        (br_id PRIMARY KEY, br_id_str, trader_id, auto_strat_name, strategy_name, order_name, account, symbol, exchange, contract, broker_profile, strat_state, opl, realized_pl, generated, final, action, order_type, qty, price, state, fill_qty, fill_price, last_update);
+        (
+          br_id PRIMARY KEY,
+          br_id_str,
+          el_trader_id,
+          trader_id,
+          strategy_name,
+          order_name,
+          account,
+          symbol,
+          exchange,
+          contract,
+          broker_profile,
+          strat_state,
+          opl,
+          realized_pl,
+          generated,
+          final,
+          action,
+          order_type,
+          qty,
+          price,
+          state,
+          fill_qty,
+          fill_price,
+          last_update,
+          FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
+          );
       ''')
     c.execute('''
       CREATE TABLE IF NOT EXISTS strategies
-        (strategy_name PRIMARY KEY, description, symbols, type, timeframes);
+        (el_trader_id PRIMARY KEY, trader_id, strategy_name, description, symbols, type, timeframes);
       ''')
     c.execute('''
         SELECT name FROM sqlite_master WHERE type='trigger' AND name='insert_strategy';
@@ -110,7 +136,7 @@ def init_db():
         BEFORE INSERT ON orders
         FOR EACH ROW
         BEGIN
-          INSERT OR IGNORE INTO strategies (strategy_name) VALUES (NEW.strategy_name);
+          INSERT OR IGNORE INTO strategies (el_trader_id, trader_id, strategy_name) VALUES (NEW.el_trader_id, NEW.trader_id, NEW.strategy_name);
         END;
         ''')
     c.execute('''

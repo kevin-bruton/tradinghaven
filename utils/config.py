@@ -34,6 +34,10 @@ def get_config_value(key):
     return config[key]
   elif key == 'enable_openapi_docs':
     return False
+  elif key == 'enable_api':
+    return False
+  elif key == 'enable_cron':
+    return False
   return default_config[key]
 
 def freq_str_to_secs(freq):

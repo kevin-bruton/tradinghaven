@@ -1,9 +1,7 @@
 from .common import mutate_many, query_one
 
 def get_order(br_id):
-  sql = '''
-      SELECT * FROM orders WHERE br_id = ?
-    '''
+  sql = 'SELECT * FROM orders WHERE br_id = ?'
   return query_one(sql, (br_id,))
 
 def get_last_filled_order_id():
@@ -21,7 +19,6 @@ def save_orders(orders: list[dict]):
       o['br_id'],
       o['br_id_str'] if 'br_id_str' in o else None,
       o['trader_id'] if 'trader_id' in o else None,
-      o['auto_strat_name'] if 'auto_strat_name' in o else None,
       o['strategy_name'] if 'strategy_name' in o else None,
       o['order_name'] if 'order_name' in o else None,
       o['account'] if 'account' in o else None,
@@ -48,8 +45,8 @@ def save_orders(orders: list[dict]):
       (
         br_id,
         br_id_str,
+        el_trader_id,
         trader_id,
-        auto_strat_name,
         strategy_name,
         order_name,
         account,
@@ -74,9 +71,9 @@ def save_orders(orders: list[dict]):
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   try:
-    return mutate_many(sql, values)
+    result = mutate_many(sql, values)
   except Exception as e:
-    print('Error trying to save orders:')
+    print('  *** Error trying to save orders:', e)
     for order in orders:
       print(order)
-  return False
+    return 0

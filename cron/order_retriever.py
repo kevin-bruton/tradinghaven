@@ -2,43 +2,20 @@ import os
 from datetime import datetime
 from db.orders import get_last_filled_order_id, save_orders, get_order
 from db.positions import save_positions
+from db.strategies import get_strategy as get_strategy_from_db, save_strategies
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
-from utils.telegram import send_message
+from utils.telegram import send_position_message
 
 orders = []
 positions = []
 last_filled_order_id = None
-strategy_ids = []
+strategies = []
 #last_logfile_modification = None
 #last_read_log_entry_ts = None
 
 def ts_to_str(ts):
   return datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S.%f')
-
-def sendPositionMessage(position):
-  def pos_get(key):
-    return position[key] if key in position else 'N/A'
-  enabled = get_config_value('send_position_messages')
-  if enabled:
-    message = f"""Position change:  
-    Strategy: {pos_get('strategy_name')}  
-    Order name: {pos_get('order_name')}  
-    Account: {pos_get('account')}  
-    Symbol: {pos_get('symbol')} {pos_get('contract')}  
-    Qty: {pos_get('qty')}  
-    Price: {pos_get('price')}  
-    Generated: {pos_get('generated')}    
-    Final: {pos_get('final')}    
-    Action: {pos_get('action')}    
-    Order Type: {pos_get('order_type')}    
-    State: {pos_get('state')}    
-    Fill Qty: {pos_get('fill_qty')}  
-    Fill Price: {pos_get('fill_price')}  
-    OPL: {pos_get('opl')}  
-    Realized P/L: {pos_get('realized_pl')}   
-    """
-    send_message(message)
 
 def logtime_to_ts(str):
   return datetime.strptime(str, '%d.%m.%Y/%H:%M:%S.%f').timestamp()
@@ -65,16 +42,23 @@ def is_strategy_identifier(content):
 def process_strategy_identifier(logentry_ts, content):
   global strategy_ids
   columns = content.split(';')
-  trader_id = columns[1]
+  el_trader_id = columns[1]
   strategy_name = columns[44]
-  strategy_ids.append([trader_id, strategy_name])
+  strategies.append({'strategy_name': strategy_name, 'el_trader_id': el_trader_id})
 
-def get_auto_strategy_name(trader_id):
-  global strategy_ids
-  found = [s[1] for s in strategy_ids if strategy_ids[0] == trader_id]
+def add_strategy_trader_id(el_trader_id, trader_id):
+  global strategies
+  found = [s for s in strategies if strategies['el_trader_id'] == el_trader_id]
+  if len(found):
+    found['trader_id'] = trader_id
+
+def get_strategy(trader_id):
+  global strategies
+  found = [s for s in strategies if strategies['trader_id'] == trader_id]
   if len(found):
     return found[1]
-  return 'Not found'
+  strategy = get_strategy_from_db(trader_id)
+  return strategy
 
 def is_strategy_order(content):
   columns = content.split(';')
@@ -95,8 +79,6 @@ def process_strategy_order(logentry_ts, content):
   order = found_orders[0]
   order['strat_state'] = state
   order['br_id_str'] = br_id_str
-  # order['trader_id'] = int(columns[4])
-  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
   order['order_name'] = columns[2][2:-1]
   order['account'] = columns[15][2:-1]
   order['symbol'] = columns[17][1:-1]
@@ -124,9 +106,13 @@ def process_onorder_event(logentry_ts, content):
     orders.append({ 'br_id': br_id })
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
+  el_trader_id = get_key_value(content, 'ELTraderID')
+  trader_id = get_key_value(content, 'TraderID')
+  add_strategy_trader_id(el_trader_id, trader_id)
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
-  order['trader_id'] = get_key_value(content, 'ELTraderID')
-  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
+  order['el_trader_id'] = el_trader_id
+  order['trader_id'] = trader_id
+  order['strategy_name'] = get_strategy(trader_id)
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -154,9 +140,13 @@ def process_popactiveorder_event(logentry_ts, content):
     orders.append({ 'br_id': br_id })
     found_orders = [o for o in orders if o['br_id'] == br_id]
   order = found_orders[0]
+  el_trader_id = get_key_value(content, 'ELTraderID')
+  trader_id = get_key_value(content, 'TraderID')
+  add_strategy_trader_id(el_trader_id, trader_id)
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
-  order['trader_id'] = get_key_value(content, 'ELTraderID')
-  order['auto_strat_name'] = get_auto_strategy_name(order['trader_id'])
+  order['el_trader_id'] = el_trader_id
+  order['trader_id'] = trader_id
+  order['strategy_name'] = get_strategy(trader_id)
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -191,7 +181,7 @@ def process_set_position(logentry_ts, content):
   order['last_update'] = logentry_ts
   #if order['state'] == 'Filled':
   positions.append(order)
-  sendPositionMessage(order)
+  send_position_message(order)
 
 def get_logfilepath_modified():
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
@@ -199,7 +189,9 @@ def get_logfilepath_modified():
   if len(logfiles) == 0:
     return
   last_modified = 0
-
+  
+  logdir = 'C:/trading-haven/cron/'
+  logfiles = ['TradingServer_2C28_11304_Trace0.txt']
   # Get the latest trading server log file name (as there may be more than one)
   logfile = ''
   for logf in logfiles:
@@ -214,7 +206,7 @@ def logfile_not_modified_since_last_read(logfile_modified_ts):
   if last_read == None:
     last_read = 0
   if last_read == logfile_modified_ts:
-    print('  No updates since last check')
+    print('TradingServer logfile has not been modified since last chec. Last:', last_read, '\n')
     return True
   save_timestamp(logfile_modified_ts, 'last_trading_server_logfile_modification')
   return False
@@ -241,7 +233,6 @@ def get_latest_orders():
     print('Error: could not read from TradingServer')
     return
   if logfile_not_modified_since_last_read(logfile_modified_ts):
-    print('No TradingServer updates since last check')
     return
 
   last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
@@ -276,8 +267,18 @@ def get_latest_orders():
 
       last_read_log_entry_ts = logentry_ts
 
+  print('STRATEGIES:')  
+  for o in strategies:
+    print(o)
+  print('ORDERS:')  
+  for o in orders:
+    print(o)
+  print('POSITIONS:')  
+  for o in positions:
+    print(o)
   save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
-
+  strategies_inserted = save_strategies(strategies)
   orders_inserted = save_orders(orders)
   positions_inserted = save_positions(positions)
-  print('  Finished updating orders and positions at', datetime.now(), '- There were', orders_inserted, 'orders and', positions_inserted, 'positions\n')
+  print('  Finished processing Trading Server logs at', datetime.now())
+  print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')
