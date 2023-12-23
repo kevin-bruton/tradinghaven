@@ -1,11 +1,23 @@
 from .common import mutate_many, query_one
 
-def get_strategy (trader_id):
+def get_strategy_by_trader_id (trader_id):
   sql = 'SELECT * FROM strategies WHERE trader_id = ?'
   values = (trader_id, )
   result = query_one(sql, values)
   if result and len(result):
-      return result[0]
+      strategy = {'el_trader_id': result[0], 'trader_id': trader_id, 'strategy_name': result[2]}
+      return strategy
+  return None
+
+def get_strategy_by_el_trader_id (el_trader_id):
+  sql = 'SELECT el_trader_id, trader_id, strategy_name FROM strategies WHERE el_trader_id = ?'
+  values = (el_trader_id, )
+  result = query_one(sql, values)
+  if result and len(result):
+      strategy = {'el_trader_id': result[0], 'strategy_name': result[2]}
+      if result[1]:
+         strategy['trader_id'] = result[1]
+      return strategy
   return None
 
 def save_strategies(strategies):

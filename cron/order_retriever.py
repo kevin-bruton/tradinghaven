@@ -2,7 +2,9 @@ import os
 from datetime import datetime
 from db.orders import get_last_filled_order_id, save_orders, get_order
 from db.positions import save_positions
-from db.strategies import get_strategy as get_strategy_from_db, save_strategies
+from db.strategies import save_strategies, \
+  get_strategy_by_el_trader_id as db_get_strategy_by_el_trader_id
+  # get_strategy_by_trader_id as db_get_strategy_by_trader_id, \
 from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
 from utils.telegram import send_position_message
@@ -43,13 +45,31 @@ def add_strategy_trader_id(el_trader_id, trader_id):
   found = [s for s in strategies if s['el_trader_id'] == el_trader_id]
   if len(found):
     found[0]['trader_id'] = trader_id
-
-def get_strategy(trader_id):
+    return found[0]
+  else:
+    strategy = db_get_strategy_by_el_trader_id(el_trader_id)
+    if strategy:
+      strategy['trader_id'] = trader_id
+      strategies.append(strategy)
+    return strategy
+'''
+def get_strategy_by_trader_id(trader_id):
   global strategies
   found = [s for s in strategies if 'trader_id' in s and s['trader_id'] == trader_id]
   if len(found):
     return found[0]
-  strategy = get_strategy_from_db(trader_id)
+  strategy = db_get_strategy_by_trader_id(trader_id)
+  if strategy and 'el_trader_id' in strategy:
+    add_strategy_trader_id(strategy['el_trader_id'], trader_id)
+  return strategy
+'''
+
+def get_strategy_by_el_trader_id(el_trader_id):
+  global strategies
+  found = [s for s in strategies if 'el_trader_id' in s and s['el_trader_id'] == el_trader_id]
+  if len(found):
+    return found[0]
+  strategy = db_get_strategy_by_el_trader_id(el_trader_id)
   return strategy
 
 def is_strategy_order(content):
@@ -96,12 +116,12 @@ def process_onorder_event(logentry_ts, content):
   order = found_orders[0]
   el_trader_id = get_key_value(content, 'ELTraderID')
   trader_id = get_key_value(content, 'TraderID')
-  add_strategy_trader_id(el_trader_id, trader_id)
-  strategy = get_strategy(trader_id)
+  strategy = add_strategy_trader_id(el_trader_id, trader_id)
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
   order['el_trader_id'] = el_trader_id
   order['trader_id'] = trader_id
-  order['strategy_name'] = strategy['strategy_name']
+  order['strategy_name'] = strategy and 'strategy_name' in strategy and strategy['strategy_name'] \
+    or 'strategy_name' in order and order['strategy_name'] or 'Not Found'
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -131,12 +151,12 @@ def process_popactiveorder_event(logentry_ts, content):
   order = found_orders[0]
   el_trader_id = get_key_value(content, 'ELTraderID')
   trader_id = get_key_value(content, 'TraderID')
-  add_strategy_trader_id(el_trader_id, trader_id)
-  strategy = get_strategy(trader_id)
+  strategy = add_strategy_trader_id(el_trader_id, trader_id)
   order['br_id_str'] = get_key_value(content, 'BrIDStr')
   order['el_trader_id'] = el_trader_id
   order['trader_id'] = trader_id
-  order['strategy_name'] = strategy['strategy_name']
+  order['strategy_name'] = strategy and 'strategy_name' in strategy and strategy['strategy_name'] \
+    or 'strategy_name' in order and order['strategy_name'] or 'Not Found'
   order['generated'] = get_key_value(content, 'Gen')
   order['final'] = get_key_value(content, 'Final')
   order['action'] = get_key_value(content, 'Actn')
@@ -170,7 +190,8 @@ def process_set_position(logentry_ts, content):
   order['realized_pl'] = float(columns[8].split('=')[1][:-1])
   order['last_update'] = logentry_ts
   positions.append(order)
-  send_position_message(order)
+  if order['realized_pl'] > 0:
+    send_position_message(order)
 
 def get_logfilepath_modified():
   dev_logfiles = get_config_value('dev_logfiles')
