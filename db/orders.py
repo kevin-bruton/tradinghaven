@@ -37,6 +37,7 @@ def save_orders(orders: list[dict]):
       o['price'] if 'price' in o else None,
       o['state'] if 'state' in o else None,
       o['fill_qty'] if 'fill_qty' in o else None,
+      o['cur_price'] if 'cur_price' in o else None,
       o['fill_price'] if 'fill_price' in o else None,
       o['last_update']
     ) for o in orders]
@@ -64,10 +65,11 @@ def save_orders(orders: list[dict]):
         price,
         state,
         fill_qty,
+        cur_price,
         fill_price,
         last_update
       )
-    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
   '''
   try:
     result = mutate_many(sql, values)

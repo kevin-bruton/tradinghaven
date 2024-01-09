@@ -1,4 +1,5 @@
 import os
+from zipfile import ZipFile
 from datetime import datetime
 from db.orders import get_last_filled_order_id, save_orders, get_order
 from db.positions import save_positions
@@ -96,6 +97,7 @@ def process_strategy_order(logentry_ts, content):
   order['contract'] = columns[31][2:-1] if len(columns) > 31 else ''
   order['broker_profile'] = columns[47][1:-1]
   order['last_update'] = logentry_ts
+  order['cur_price'] = columns[11]
   is_order_filled = columns[5] == '5'
   if is_order_filled:
     last_filled_order_id = br_id
@@ -193,6 +195,14 @@ def process_set_position(logentry_ts, content):
   if order['realized_pl'] > 0:
     send_position_message(order)
 
+def get_all_logfile_names():
+  logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
+  logfiles = [f for f in os.listdir(logdir) if f.startswith('TradingServer')]
+  def logfiles_order(file):
+    return os.path.getmtime(logdir + file)
+  logfiles.sort(key=logfiles_order)
+  return [logdir + f for f in logfiles]
+
 def get_logfilepath_modified():
   dev_logfiles = get_config_value('dev_logfiles')
   if dev_logfiles:
@@ -238,8 +248,32 @@ def get_logentry_ts_and_content(line):
     return [log_ts, content]
   return [None, None]
 
+def get_all_orders():
+  last_entry_ts = 0
+  logfilepaths = get_all_logfile_names()
+  for logfilepath in logfilepaths:
+    print('Processing', logfilepath)
+    extension = logfilepath.split('.')[-1]
+    if extension == 'zip':
+      with ZipFile(logfilepath) as zipfile:
+        namelist = zipfile.namelist()
+        with zipfile.open(namelist[0], 'r') as f:
+          for line in f:
+            last_entry_ts = process_logentry(line.decode('utf-8'), last_entry_ts)
+    else:
+      with open(logfilepath, 'r') as f:
+        for line in f:
+          last_entry_ts = process_logentry(line, last_entry_ts)
+
+  save_timestamp(last_entry_ts, 'last_trading_server_log_read')
+  strategies_inserted = save_strategies(strategies)
+  orders_inserted = save_orders(orders)
+  positions_inserted = save_positions(positions)
+  print('  Finished processing Trading Server logs at', datetime.now())
+  print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')
+        
+
 def get_latest_orders():
-  global last_filled_order_id
   try:
     logfile, logfile_modified_ts = get_logfilepath_modified()
   except Exception as e:
@@ -247,42 +281,46 @@ def get_latest_orders():
     return
   if logfile_not_modified_since_last_read(logfile_modified_ts):
     return
-
-  last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
-
-  last_filled_order_id = get_last_filled_order_id()
   
-  # Read log entries
-  print('\nUpdating orders and positions at', datetime.now(), '...')
   with open(logfile, 'r') as f:
-    for line in f:
-      logentry_ts, content = get_logentry_ts_and_content(line)
-      if logentry_ts == None or content == None:
-        continue
+    #global last_filled_order_id
+    last_read_log_entry_ts = get_timestamp('last_trading_server_log_read')
+    #last_filled_order_id = get_last_filled_order_id()
 
-      if logentry_already_processed(logentry_ts, last_read_log_entry_ts):
-        continue
+    # Read log entries
+    print('\nUpdating orders and positions at', datetime.now(), '...')
+    for line in logfile:
+      last_read_log_entry_ts = process_logentry(line, last_read_log_entry_ts)
 
-      #print(ts_to_str(logentry_ts)[:16], ts_to_str(last_read_log_entry_ts)[:16])
-      if ts_to_str(logentry_ts)[:13] != ts_to_str(last_read_log_entry_ts)[:13]:
-        print('  Reading log entries at hour: ', ts_to_str(logentry_ts)[:13])
-      
-      if is_strategy_identifier(content):
-        process_strategy_identifier(logentry_ts, content)
-      if is_strategy_order(content):
-        process_strategy_order(logentry_ts, content)
-      elif is_onorder_event(content):
-        process_onorder_event(logentry_ts, content)
-      elif is_popactiveorder_event(content):
-        process_popactiveorder_event(logentry_ts, content)
-      elif is_set_position(content):
-        process_set_position(logentry_ts, content)
+    save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
+    strategies_inserted = save_strategies(strategies)
+    orders_inserted = save_orders(orders)
+    positions_inserted = save_positions(positions)
+    print('  Finished processing Trading Server logs at', datetime.now())
+    print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')
 
-      last_read_log_entry_ts = logentry_ts
+def process_logentry(line, last_read_log_entry_ts=0):
+  logentry_ts, content = get_logentry_ts_and_content(line)
+  if logentry_ts == None or content == None:
+    return
 
-  save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
-  strategies_inserted = save_strategies(strategies)
-  orders_inserted = save_orders(orders)
-  positions_inserted = save_positions(positions)
-  print('  Finished processing Trading Server logs at', datetime.now())
-  print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')
+  if logentry_already_processed(logentry_ts, last_read_log_entry_ts):
+    return
+
+  #print(ts_to_str(logentry_ts)[:16], ts_to_str(last_read_log_entry_ts)[:16])
+  if last_read_log_entry_ts and ts_to_str(logentry_ts)[:13] != ts_to_str(last_read_log_entry_ts)[:13]:
+    print('  Reading log entries at hour: ', ts_to_str(logentry_ts)[:13])
+  
+  if is_strategy_identifier(content):
+    process_strategy_identifier(logentry_ts, content)
+  if is_strategy_order(content):
+    process_strategy_order(logentry_ts, content)
+  elif is_onorder_event(content):
+    process_onorder_event(logentry_ts, content)
+  elif is_popactiveorder_event(content):
+    process_popactiveorder_event(logentry_ts, content)
+  elif is_set_position(content):
+    process_set_position(logentry_ts, content)
+
+  return logentry_ts
+

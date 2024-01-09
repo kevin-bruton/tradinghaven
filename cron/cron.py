@@ -1,15 +1,14 @@
 import schedule
 import time
-from .order_retriever import get_latest_orders
+from .order_retriever import get_latest_orders, get_all_orders
 from .connection_status import get_connection_status
 from utils.config import get_config_value, freq_str_to_secs
-from utils.telegram import send_message
 
 def run_cron():
   enable_cron = get_config_value('enable_cron')
   
-  get_connection_status()
-  get_latest_orders()
+  # get_connection_status()
+  get_all_orders()
   print('Initial synchronisation completed!\n')
   
   if not enable_cron:

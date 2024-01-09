@@ -84,9 +84,10 @@ def init_db():
           action,
           order_type,
           qty,
-          price,
           state,
           fill_qty,
+          cur_price,
+          price,
           fill_price,
           last_update,
           FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
@@ -113,9 +114,10 @@ def init_db():
           action,
           order_type,
           qty,
-          price,
           state,
           fill_qty,
+          cur_price,
+          price,
           fill_price,
           last_update,
           FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
