@@ -7,21 +7,13 @@ def send_position_message(position):
   enabled = get_config_value('send_position_messages')
   if enabled:
     message = f"""Position change:  
-    Strategy: {pos_get('strategy_name')}  
-    Order name: {pos_get('order_name')}  
-    Account: {pos_get('account')}  
-    Symbol: {pos_get('symbol')} {pos_get('contract')}  
-    Qty: {pos_get('qty')}  
-    Price: {pos_get('price')}  
-    Generated: {pos_get('generated')}    
-    Final: {pos_get('final')}    
-    Action: {pos_get('action')}    
-    Order Type: {pos_get('order_type')}    
-    State: {pos_get('state')}    
-    Fill Qty: {pos_get('fill_qty')}  
-    Fill Price: {pos_get('fill_price')}  
-    OPL: {pos_get('opl')}  
-    Realized P/L: {pos_get('realized_pl')}   
+    Strategy: {pos_get('strategyName')}  
+    Broker Profile: {pos_get('brokerProfile')}  
+    ExecTime: {pos_get('execTime')}  
+    Symbol: {pos_get('symbol')}  
+    Qty: {pos_get('execQty')}  
+    Commission: {pos_get('commission')}  
+    Realized P/L: {pos_get('realizedPnl')}    
     """
     send_message(message)
 

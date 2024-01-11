@@ -21,32 +21,28 @@ def get_strategy_by_el_trader_id (el_trader_id):
   return None
 
 def save_strategies(strategies):
-  with_trader_id_values = [(
-      s['el_trader_id'],
-      s['trader_id'],
-      s['strategy_name']
-    ) for s in strategies if 'trader_id' in s]
-  without_trader_id_values = [(
-      s['el_trader_id'],
-      s['strategy_name']
-    ) for s in strategies if 'trader_id' not in s]
-  
-  with_trader_id_sql = '''
+  values = [(
+      s['strategyId'],
+      s['strategyName'],
+      s['workspace'],
+      s['account'],
+      s['brokerProfile'],
+      s['symbol'],
+      s['symbolRoot'],
+      s['exchange'],
+      s['currency'],
+      s['regDate']
+    ) for s in strategies]
+  sql = '''
       INSERT OR REPLACE INTO strategies
-      (el_trader_id, trader_id, strategy_name)
-      VALUES (?,?,?)
-    '''
-  without_trader_id_sql = '''
-      INSERT OR REPLACE INTO strategies
-      (el_trader_id, strategy_name)
-      VALUES (?,?)
+      (strategyId, strategyName, workspace, account, brokerProfile, symbol, symbolRoot, exchange, currency, regDate)
+      VALUES (?,?,?,?,?,?,?,?,?,?)
     '''
   try:
-    with_trader_id_inserted = mutate_many(with_trader_id_sql, with_trader_id_values)
-    without_trader_id_inserted = mutate_many(without_trader_id_sql, without_trader_id_values)
-    return with_trader_id_inserted + without_trader_id_inserted
+    inserted = mutate_many(sql, values)
+    return inserted
   except Exception as e:
-    print('Error trying to save strategies:')
     for strategy in strategies:
       print(strategy)
+    print('Error trying to save strategies:', repr(e))
   return False

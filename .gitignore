@@ -22,4 +22,4 @@ __pycache__
 haven.db
 config.json
 haven.db-journal
-scripts/data
+ib/data

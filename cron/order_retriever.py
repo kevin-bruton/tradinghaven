@@ -1,7 +1,7 @@
 import os
 from zipfile import ZipFile
 from datetime import datetime
-from db.orders import get_last_filled_order_id, save_orders, get_order
+from db.orders import get_last_filled_order_id, save_log_orders, get_order
 from db.positions import save_positions
 from db.strategies import save_strategies, \
   get_strategy_by_el_trader_id as db_get_strategy_by_el_trader_id
@@ -267,7 +267,7 @@ def get_all_orders():
 
   save_timestamp(last_entry_ts, 'last_trading_server_log_read')
   strategies_inserted = save_strategies(strategies)
-  orders_inserted = save_orders(orders)
+  orders_inserted = save_log_orders(orders)
   positions_inserted = save_positions(positions)
   print('  Finished processing Trading Server logs at', datetime.now())
   print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')
@@ -294,7 +294,7 @@ def get_latest_orders():
 
     save_timestamp(last_read_log_entry_ts, 'last_trading_server_log_read')
     strategies_inserted = save_strategies(strategies)
-    orders_inserted = save_orders(orders)
+    orders_inserted = save_log_orders(orders)
     positions_inserted = save_positions(positions)
     print('  Finished processing Trading Server logs at', datetime.now())
     print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders and', positions_inserted, 'positions\n')

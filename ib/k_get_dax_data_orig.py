@@ -98,19 +98,6 @@ def symbols_pending(data_requests):
 
 #####################################################################################################
 
-symbol_status = {
-    'DAX': 'not_started'
-}
-one_day_in_secs = 60*60*24
-duration_td = timedelta(seconds=one_day_in_secs)
-duration_str = str(one_day_in_secs) + ' S'
-
-ib_request = threading.Event()
-trade_app = TradeApp()
-trade_app.connect(host='127.0.0.1', port=4002, clientId=2) #port 4002 for ib gateway paper trading/7497 for TWS paper trading
-con_thread = threading.Thread(target=trade_app.run)
-con_thread.start()
-
 def get_symbol_data(symbol):
     global data
     currentDatetime = datetime(2023,8,10) #datetime.now()
@@ -151,6 +138,20 @@ def write_symbol_data(symbol):
     filepath = f"{os.path.dirname(os.path.realpath(__file__))}/data/@F{symbol}_updated.csv"
     with open(filepath, 'w') as f:
         f.write(data)
+
+
+symbol_status = {
+    'DAX': 'not_started'
+}
+one_day_in_secs = 60*60*24
+duration_td = timedelta(seconds=one_day_in_secs)
+duration_str = str(one_day_in_secs) + ' S'
+
+ib_request = threading.Event()
+trade_app = TradeApp()
+trade_app.connect(host='127.0.0.1', port=4002, clientId=2) #port 4002 for ib gateway paper trading/7497 for TWS paper trading
+con_thread = threading.Thread(target=trade_app.run)
+con_thread.start()
 
 time.sleep(2) # Give time to connect...
 print()

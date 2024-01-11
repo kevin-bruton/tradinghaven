@@ -13,23 +13,32 @@ enable_api = get_config_value('enable_api')
 from time import sleep
 from threading import Thread
 from cron.cron import run_cron
+from ib.ib_monitor import run_ib
 from api_server import run_api_server
 from db.common import init_db
+from log_analyser.read_logs import read_all_logs
 
 init_db()
 
+# read_all_logs()
+
 cron_thread = Thread(target=run_cron, daemon=True)
+ib_thread = Thread(target=run_ib, daemon=True)
 if enable_api:
   api_server_thread = Thread(target=run_api_server, daemon=True)
   api_server_thread.start()
   sleep(5)
 cron_thread.start()
+ib_thread.start()
 
 try:
-  while cron_thread.is_alive() or (enable_api and api_server_thread.is_alive()):
-    cron_thread.join(1)
-    if enable_api:
-      api_server_thread.join(1)
+  while cron_thread.is_alive() \
+    or (enable_api and api_server_thread.is_alive()) \
+    or ib_thread.is_alive():
+      cron_thread.join(1)
+      ib_thread.join(1)
+      if enable_api:
+        api_server_thread.join(1)
 finally:
   print('\n\nThe Trading Haven Server has stopped!\n')
   exit(0)

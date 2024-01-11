@@ -57,7 +57,7 @@ def process_tws_mc_connected_event(ts):
   if last_tws_mc_status_connected != True:
     connection_events.append({ 'ts': ts, 'type': 'tws_mc', 'connected': True })
     last_tws_mc_status_connected = True
-    sendConnectionMessage(ts, 'TWS - MC Connection Restored')
+    sendConnectionMessage(ts, 'IB - MC Connection Restored')
 
 def is_tws_mc_disconnected_event(content):
   return bool(content.count('<= ib_server::CIBServer::OnConnectionLost')) \
@@ -68,7 +68,7 @@ def process_tws_mc_disconnected_event(ts):
   if last_tws_mc_status_connected != False:
     connection_events.append({ 'ts': ts, 'type': 'tws_mc', 'connected': False })
     last_tws_mc_status_connected = False
-    sendConnectionMessage(ts, 'TWS - MC Connection Lost')
+    sendConnectionMessage(ts, 'IB - MC Connection Lost')
 
 def is_data_connected_event(content):
   return bool(content.count('Market data farm connection is OK:usfuture')) \
@@ -148,14 +148,14 @@ def get_connection_status():
       save_timestamp(last_read_log_entry_ts, 'last_tws_log_read')
 
       content = line[content_idx+1:].strip()
-      if is_ib_tws_connected_event(content):
-        process_ib_tws_connected_event(current_log_entry_timestamp)
+      #if is_ib_tws_connected_event(content):
+      #  process_ib_tws_connected_event(current_log_entry_timestamp)
       if is_tws_mc_connected_event(content):
         process_tws_mc_connected_event(current_log_entry_timestamp)
       if is_data_connected_event(content):
         process_data_connected_event(current_log_entry_timestamp)
-      if is_ib_tws_disconnected_event(content):
-        process_ib_tws_disconnected_event(current_log_entry_timestamp)
+      #if is_ib_tws_disconnected_event(content):
+      #  process_ib_tws_disconnected_event(current_log_entry_timestamp)
       if is_tws_mc_disconnected_event(content):
         process_tws_mc_disconnected_event(current_log_entry_timestamp)
       if is_data_disconnected_event(content):

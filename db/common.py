@@ -66,34 +66,26 @@ def init_db():
     c.execute('''
       CREATE TABLE IF NOT EXISTS orders
         (
-          br_id PRIMARY KEY,
-          br_id_str,
-          el_trader_id,
-          trader_id,
-          strategy_name,
-          order_name,
-          account,
-          symbol,
-          exchange,
-          contract,
-          broker_profile,
-          opl,
-          realized_pl,
+          orderId PRIMARY KEY,
+          strategyId,
           generated,
           final,
+          execTime,
+          fillQty,
+          execQty,
+          fillPrice,
+          execPrice,
+          orderType,
           action,
-          order_type,
-          qty,
           state,
-          fill_qty,
-          cur_price,
-          price,
-          fill_price,
-          last_update,
-          FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
+          stopPrice,
+          limitPrice,
+          commission,
+          realizedPnl,
+          FOREIGN KEY (strategyId) REFERENCES strategies (strategyId)
         );
       ''')
-    c.execute('''
+    """c.execute('''
       CREATE TABLE IF NOT EXISTS positions
         (
           br_id PRIMARY KEY,
@@ -123,10 +115,23 @@ def init_db():
           FOREIGN KEY (el_trader_id) REFERENCES strategies (el_trader_id)
           );
       ''')
+    """
     c.execute('''
       CREATE TABLE IF NOT EXISTS strategies
-        (el_trader_id PRIMARY KEY, trader_id, strategy_name, description, symbols, type, timeframes);
+        (
+          strategyId PRIMARY KEY,
+          strategyName,
+          workspace,
+          account,
+          brokerProfile,
+          symbol,
+          symbolRoot,
+          exchange,
+          currency,
+          regDate
+        );
       ''')
+    """
     c.execute('''
         SELECT name FROM sqlite_master WHERE type='trigger' AND name='insert_strategy';
       ''')
@@ -139,6 +144,7 @@ def init_db():
           INSERT OR IGNORE INTO strategies (el_trader_id, trader_id, strategy_name) VALUES (NEW.el_trader_id, NEW.trader_id, NEW.strategy_name);
         END;
         ''')
+    """
     c.execute('''
       CREATE TABLE IF NOT EXISTS symbols
         (symbol PRIMARY KEY, contract, min_avg_trade, slippage, tick_size, tick_value, margin, multiplier, exchange);
