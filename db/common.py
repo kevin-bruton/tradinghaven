@@ -41,11 +41,12 @@ def query_one(sql, values=()):
     conn.close()
 
 
-def query_many(sql, values: list[tuple]):
+def query_many(sql, values: list[tuple] = None):
   conn = sqlite3.connect(db_path)
   try:
     c = conn.cursor()
-    c.execute(sql, values)
+    c.row_factory = sqlite3.Row
+    c.execute(sql, values) if values else c.execute(sql)
     result = c.fetchall()
     return result
   finally:
@@ -68,6 +69,7 @@ def init_db():
         (
           orderId PRIMARY KEY,
           strategyId,
+          symbolRoot,
           generated,
           final,
           execTime,

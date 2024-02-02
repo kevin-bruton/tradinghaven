@@ -1,4 +1,20 @@
-from .common import mutate_many, query_one
+from .common import mutate_many, query_one, query_many
+
+def get_strategies():
+   sql = 'SELECT DISTINCT strategyName, workspace, account, brokerProfile, symbol, symbolRoot, exchange, currency FROM strategies'
+   result = query_many(sql)
+   return result
+
+def get_strategy_trades(strategyName, accountId):
+   sql = '''
+      SELECT orders.orderId, orders.symbolRoot, orders.generated, orders.final, orders.execQty, orders.execPrice, orders.orderType, orders.action, orders.stopPrice, orders.limitPrice, orders.commission, orders.realizedPnl
+      FROM orders, strategies
+      WHERE orders.strategyId = strategies.strategyId
+      AND strategies.strategyName = ?
+      AND strategies.account = ?
+    '''
+   result = query_many(sql, (strategyName, accountId))
+   return result
 
 def get_strategy_by_trader_id (trader_id):
   sql = 'SELECT * FROM strategies WHERE trader_id = ?'

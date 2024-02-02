@@ -28,33 +28,12 @@ def get_last_filled_order_id():
     return result[0]
   return None
 
-def save_ib_orders(executions):
-  orders = executions.values()
-  values = [(
-    int(o['orderId']),
-    o['execTime'] if 'execTime' in o else None,
-    o['action'] if 'action' in o else None,
-    o['execQty'] if 'execQty' in o else None,
-    o['execPrice'] if 'execPrice' in o else None,
-    o['orderType'] if 'orderType' in o else None,
-    o['stopPrice'] if 'stopPrice' in o else None,
-    o['limitPrice'] if 'limitPrice' in o else None,
-    o['commission'] if 'commission' in o else None,
-    o['realizedPnl'] if 'realizedPnl' in o else None,
-    o['execTime'] if 'execTime' in o else None,
-    o['action'] if 'action' in o else None,
-    o['execQty'] if 'execQty' in o else None,
-    o['execPrice'] if 'execPrice' in o else None,
-    o['orderType'] if 'orderType' in o else None,
-    o['stopPrice'] if 'stopPrice' in o else None,
-    o['limitPrice'] if 'limitPrice' in o else None,
-    o['commission'] if 'commission' in o else None,
-    o['realizedPnl'] if 'realizedPnl' in o else None
-  ) for o in orders]
+def save_ib_orders(values):
   sql = '''
     INSERT INTO orders
       (
         orderId,
+        symbolRoot,
         execTime,
         action,
         execQty,
@@ -65,9 +44,10 @@ def save_ib_orders(executions):
         commission,
         realizedPnl
       )
-    VALUES(?,?,?,?,?,?,?,?,?,?)
+    VALUES(?,?,?,?,?,?,?,?,?,?,?)
     ON CONFLICT(orderId) DO
     UPDATE SET
+      symbolRoot=?,
       execTime=?,
       action=?,
       execQty=?,
@@ -83,8 +63,6 @@ def save_ib_orders(executions):
     return result
   except Exception as e:
     print('  *** Error trying to save orders:', e)
-    for order in orders:
-      print(order)
     return 0
 
 def save_log_orders(orders: list[dict]):
@@ -95,10 +73,16 @@ def save_log_orders(orders: list[dict]):
       o['final'] if 'final' in o else None,
       o['fillQty'] if 'fillQty' in o else None,
       o['fillPrice'] if 'fillPrice' in o else None,
+      o['state'] if 'state' in o else None,
+      o['strategyId'] if 'strategyId' in o else None,
+      o['generated'] if 'generated' in o else None,
+      o['final'] if 'final' in o else None,
+      o['fillQty'] if 'fillQty' in o else None,
+      o['fillPrice'] if 'fillPrice' in o else None,
       o['state'] if 'state' in o else None
     ) for o in orders if o['state'] == 'Filled']
   sql = '''
-    INSERT OR REPLACE INTO orders
+    INSERT INTO orders
       (
         orderId,
         strategyId,
@@ -109,6 +93,14 @@ def save_log_orders(orders: list[dict]):
         state
       )
     VALUES(?,?,?,?,?,?,?)
+    ON CONFLICT(orderId) DO
+    UPDATE SET
+      strategyId=?,
+      generated=?,
+      final=?,
+      fillQty=?,
+      fillPrice=?,
+      state=?;
   '''
   try:
     result = mutate_many(sql, values)
