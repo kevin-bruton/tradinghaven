@@ -148,14 +148,14 @@ def get_connection_status():
       save_timestamp(last_read_log_entry_ts, 'last_tws_log_read')
 
       content = line[content_idx+1:].strip()
-      #if is_ib_tws_connected_event(content):
-      #  process_ib_tws_connected_event(current_log_entry_timestamp)
+      if is_ib_tws_connected_event(content):
+        process_ib_tws_connected_event(current_log_entry_timestamp)
       if is_tws_mc_connected_event(content):
         process_tws_mc_connected_event(current_log_entry_timestamp)
       if is_data_connected_event(content):
         process_data_connected_event(current_log_entry_timestamp)
-      #if is_ib_tws_disconnected_event(content):
-      #  process_ib_tws_disconnected_event(current_log_entry_timestamp)
+      if is_ib_tws_disconnected_event(content):
+        process_ib_tws_disconnected_event(current_log_entry_timestamp)
       if is_tws_mc_disconnected_event(content):
         process_tws_mc_disconnected_event(current_log_entry_timestamp)
       if is_data_disconnected_event(content):
