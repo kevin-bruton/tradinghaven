@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from ib.contracts import contract
 import os
 
-from ib.ib_client import IbClient
+from ib.old.ib_client import IbClient
 
 date_fmt = "%Y%m%d-%H:%M:%S"
 
