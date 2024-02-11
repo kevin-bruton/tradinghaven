@@ -1,7 +1,6 @@
 from typing import Annotated
 from fastapi import FastAPI, Header, HTTPException, Request, Response, status
-from routers import trades
-from routers import strategies
+from api.routers import trades, strategies, ib
 from utils.config import get_config_value
 
 openapi_url = '/openapi.json' if get_config_value('enable_openapi_docs') else ''
@@ -16,6 +15,7 @@ async def client_authentication(request: Request, call_next):
 
 app.include_router(trades.router)
 app.include_router(strategies.router)
+app.include_router(ib.router)
 
 @app.get("/hello")
 def read_root():

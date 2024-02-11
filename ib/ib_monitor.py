@@ -4,6 +4,7 @@ from ib_insync import *
 from log_analyser.read_logs import read_latest_log
 from db.orders import save_ib_orders, get_order
 from utils.telegram import send_position_message
+from api.ib_requests import get_req, set_res
 
 saved_execution_ids = []
 
@@ -69,18 +70,25 @@ def run_ib():
     print('Saved', saved, 'IB Execution Orders')
     # Send Telegram message about the order execution
     #   when realizedPnl != 0
-    print('Num fills:', len(fills), fills[0] if len(fills) == 1 else '')
+    #print('Num fills:', len(fills), fills[0] if len(fills) == 1 else '')
     if len(fills) == 1:
       _sendExecutionMessage(fills[0])
 
   def _sendExecutionMessage(fill):
+    print('_sendExecutionMessage. realizedPnl:', fill.commissionReport.realizedPNL)
     if fill.commissionReport.realizedPNL != 0:
       order = get_order(fill.execution.orderId)
+      print('_sendExecutionMessage. order:', order)
       send_position_message(order)
 
   def _executionPerformed(trade, fill):
     print('Caught executionDetailEvent', fill.contract.symbol, fill.execution.side, fill.execution.shares)
     _processFills([fill])
+
+  def _process_api_request(api_request):
+    if api_request == 'accounts':
+      accounts = ib.managedAccounts()
+      set_res('accounts', accounts)
 
   try:
     loop = asyncio.get_event_loop()
@@ -100,6 +108,9 @@ def run_ib():
   while True:
     try:
       ib.sleep(1)
+      api_request = get_req()
+      if api_request != None:
+        _process_api_request(api_request)
     except Exception as e:
       print(repr)
   ibTrader.disconnect()

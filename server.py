@@ -14,13 +14,13 @@ from time import sleep
 from threading import Thread
 from cron.cron import run_cron
 from ib.ib_monitor import run_ib
-from api_server import run_api_server
+from api.api_server import run_api_server
 from db.common import init_db
 from log_analyser.read_logs import read_all_logs
 
 init_db()
 
-# read_all_logs()
+#read_all_logs()
 
 cron_thread = Thread(target=run_cron, daemon=True)
 ib_thread = Thread(target=run_ib, daemon=True)
