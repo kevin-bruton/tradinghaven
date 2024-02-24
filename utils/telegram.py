@@ -28,7 +28,10 @@ def send_message(text):
       'text': text,
       'parse_mode': 'HTML'
     }
-    response = requests.post(url=url,data=data).json()
+    try:
+      response = requests.post(url=url,data=data).json()
+    except Exception as e:
+      print('Exception sending telegram message:', repr(e))
     if 'error_code' in response:
       print('Error sending msg:', text)
       print('  ', response['description'])

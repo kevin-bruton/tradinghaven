@@ -1,5 +1,5 @@
 from datetime import datetime
-from .common import mutate_many
+from .common import mutate_many, query_many
 
 def str_to_ts(str):
   return datetime.strptime(str, '%Y-%m-%d %H:%M:%S.%f').timestamp()
@@ -19,3 +19,8 @@ def save_connection_events(connection_events: list[dict]):
       VALUES(?,?,?,?)
   '''
   return mutate_many(sql, values)
+
+def get_connection_events(from_date: str):
+  sql = 'SELECT * FROM connection_events WHERE ts > ?'
+  result = query_many(sql, (from_date,))
+  return result

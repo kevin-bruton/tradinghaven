@@ -1,8 +1,13 @@
 from .common import mutate_many, query_one, query_many
 
 def get_strategies():
-   sql = 'SELECT DISTINCT strategyName, workspace, account, brokerProfile, symbol, symbolRoot, exchange, currency FROM strategies'
+   sql = 'SELECT DISTINCT strategyName, account FROM strategies'
    result = query_many(sql)
+   return result
+
+def get_strategies_accounts():
+   sql = 'SELECT account FROM strategies'
+   result = query_one(sql)
    return result
 
 def get_strategy_trades(strategyName, accountId):

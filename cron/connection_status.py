@@ -95,7 +95,10 @@ def get_connection_status():
   global last_logfile_modification
   global last_read_log_entry_ts
   logdir = os.path.join(get_config_value('multicharts_data_directory'), 'Logs/TradingServer/')
-  logfiles = [f for f in os.listdir(logdir) if f.startswith('TWSTradingPlugin')]
+  try:
+    logfiles = [f for f in os.listdir(logdir) if f.startswith('TWSTradingPlugin')]
+  except:
+    return
   if len(logfiles) == 0:
     return
 

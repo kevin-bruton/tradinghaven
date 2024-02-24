@@ -20,7 +20,7 @@ from log_analyser.read_logs import read_all_logs
 
 init_db()
 
-#read_all_logs()
+read_all_logs()
 
 cron_thread = Thread(target=run_cron, daemon=True)
 ib_thread = Thread(target=run_ib, daemon=True)
