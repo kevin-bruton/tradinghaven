@@ -1,0 +1,78 @@
+// ref: _OHLCMulti5Rev
+// fatte modifiche per efficientare il tutto. Rispetto la _OHLCMulti5Rev NON E' STATO CAMBIATO isStartOfSession
+// Davide Tagliabue - 01/03/2022
+
+//La funzione puo' essere utilizzata cosi': IsStartOfSession = _OHLCMulti5rev2(0000, 0000, ohlcValues);
+
+input:
+	startTime(numericsimple),
+	endTime(numericsimple),
+	ohlcValues[X](NumericArrayRef),
+	probabilityOfChangePct(numericsimple),
+	maxChangePct(numericSimple);
+
+var: ohlcValuesLength(0);
+ohlcValuesLength = array_getmaxindex(ohlcValues);
+
+vars:  actO(0), actH(0), actL(0), actC(0), actDayIdx(0), retIdx(0);
+vars:  oneDaySession(true), inSessionTime(false),isStartOfSession(false);
+vars:  isBrokenSession(false), timeStarted(false), timeNotEnded(false), prevTimeLessSTime(false);  //isBrokenSession is just a flag
+vars:  dayRef(0),valRef(0);
+
+if BarType > 1 then RaiseRuntimeError("Function just makes sense on intraday bars");
+
+oneDaySession = StartTime < EndTime; // if it's not a oneDaySession(e.g. 8 till 20 o'clock), it's a twoDaySession(e.g. 17 till 1659 o'clock)
+// if StartTime = EndTime --> twoDaySession
+//--------------------------------------------------------------
+timeStarted = t > StartTime;	timeNotEnded = t <= EndTime;	prevTimeLessSTime = t[1] <= StartTime;
+//--------------------------------------------------------------
+if (oneDaySession) then begin
+	inSessionTime = timeStarted And timeNotEnded;
+end else begin // session goes over 2 days becaus EndTime <= StartTime
+	inSessionTime = timeStarted Or timeNotEnded;
+end;
+isStartOfSession = inSessionTime And timeStarted And prevTimeLessSTime;
+
+// A session is split in two, if in a oneDaySession the day changes b) 
+if (oneDaySession) then begin
+	isStartOfSession = isStartOfSession Or (inSessionTime And d<>d[1]);
+end else begin	//in a twoDaySession a missing day occours in session (sunday excluded!)
+	if (inSessionTime And d>CalcDate(d[1],1) and dayofweek(d)<>0) then begin
+	isBrokenSession = true;
+	isStartOfSession = true;
+	end;
+end;
+
+if d<>d[1] and t<>0 and dayofweek(d)<>0 and StartTime = EndTime and StartTime = 0 then isStartOfSession = true; //VA MESSO PERCHE se sei in condizioni
+//di StartTime = EndTime = 0000 e ti manca la barra che finisce alle 0000 allora sei fregato
+//t <> 0 serve perche questa riga NON va bene se c'e la barra che finisce alle 00:00 (ricorda che per MC e TS
+//la data cambia quando ci sono proprio le 00!!)
+//-----------------------------------------------------------------
+
+if actO=0 then begin // init prices on first time
+	actO = O; actH = H; actL = L; actC = C;
+end;
+
+// update high-low-close of the day
+if inSessionTime then begin
+	actL = minlist(actL, L); actH = maxlist(actH, H); actC = C;
+end;
+
+// resets on session start
+if (isStartOfSession) then begin
+	isBrokenSession = false;
+	actO = O; actH = H; actL = L; actC = C;
+	for dayRef = ohlcValuesLength-4 downto 0 begin
+		ohlcValues[dayRef+4] = ohlcValues[dayRef];
+	end;
+	if maxChangePct > 0 then
+		//_OHLCRandom(ohlcValues, probabilityOfChangePct, maxChangePct);
+		_OHLCRandomValues(ohlcValues,maxChangePct);
+		//_OHLCRandomValues2(ohlcValues,ohlcValuesREAL,randomValue);
+end;
+// fill return values
+
+ohlcValues[0] = actO; ohlcValues[1] = actH; ohlcValues[2] = actL; ohlcValues[3] = actC;
+
+_OHLCMulti5Rev2 = isStartOfSession;
+

@@ -1,10 +1,11 @@
-import time
+from datetime import datetime, timedelta
 import asyncio
 from ib_insync import *
 from log_analyser.read_logs import read_latest_log
 from db.orders import save_ib_orders, get_order
 from utils.telegram import send_position_message
 from api.ib_requests import get_req, set_res
+from ib.contracts import contract
 
 saved_execution_ids = []
 
@@ -26,9 +27,9 @@ def run_ib():
       execPrice = f.execution.price
       orderRef = f.execution.orderRef
       if len(orderRef):
-        rawStopPrice = float(orderRef.split(',')[7].split(':')[1].strip())
-        rawLimitPrice = float(orderRef.split(',')[8].split(':')[1].strip())
-        orderType = orderRef.split(',')[5].split(':')[1].strip()
+        rawStopPrice = float(orderRef.split(',')[7].split(':')[1].strip()) if len(orderRef.split(',')) > 7 else 0 
+        rawLimitPrice = float(orderRef.split(',')[8].split(':')[1].strip()) if len(orderRef.split(',')) > 7 else 0
+        orderType = orderRef.split(',')[5].split(':')[1].strip() if len(orderRef.split(',')) > 7 else 0 
         stopPrice = rawStopPrice if str(rawStopPrice)[-5:] != 'e+308' else 0
         limitPrice = rawLimitPrice if str(rawLimitPrice)[-5:] != 'e+308' else 0
       else:
@@ -75,7 +76,7 @@ def run_ib():
       _sendExecutionMessage(fills[0])
 
   def _sendExecutionMessage(fill):
-    print('_sendExecutionMessage. realizedPnl:', fill.commissionReport.realizedPNL)
+    print('_sendExecutionMessage. realizedPnl:', fill.commissionReport.realizedPNL, '; commissionReport:', fill.commissionReport, '; execution:', fill.execution)
     if fill.commissionReport.realizedPNL != 0:
       order = get_order(fill.execution.orderId)
       print('_sendExecutionMessage. order:', order)
@@ -86,9 +87,26 @@ def run_ib():
     _processFills([fill])
 
   def _process_api_request(api_request):
-    if api_request == 'accounts':
+    if api_request['name'] == 'accounts':
+      print('isConnected:', ib.isConnected())
       accounts = ib.managedAccounts()
       set_res('accounts', accounts)
+    elif api_request['name'] == 'data':
+      year = int(api_request['day_YYYYMMDD'][:4])
+      month = int(api_request['day_YYYYMMDD'][4:6])
+      day = int(api_request['day_YYYYMMDD'][6:8])
+      end_dt = datetime(year, month, day, 23, 59, 59)
+      bars = ib.reqHistoricalData(
+        contract(api_request['symbol']),
+        endDateTime=end_dt,
+        durationStr='1 D',
+        barSizeSetting='1 min',
+        whatToShow='TRADES',
+        useRTH=True,
+        formatDate=1
+      )
+      only_bars_on_the_day = [b for b in bars if b.date.strftime('%Y-%m-%d') == datetime(year, month, day).strftime('%Y-%m-%d')]
+      set_res('data', only_bars_on_the_day)
 
   try:
     loop = asyncio.get_event_loop()

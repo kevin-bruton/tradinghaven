@@ -1,0 +1,36 @@
+
+inputs:
+	stopLoss(1500),
+	takeProfit(2000),
+	startTrading(700),
+	stopTrading(1700),
+	ptnLY(3), ptnLN(109),
+	ptnSY(45), ptnSN(34),
+	numMcSimulation(0);
+	
+vars:
+	sessionStart(1800),
+	sessionEnd(1700),
+	probabilityOfChangePct(50),
+	maxChangePct(5);
+
+array: ohlc[23](0);
+_OHLCMulti5Rev2(sessionStart, sessionEnd, ohlc, probabilityOfChangePct, maxChangePct);
+// _OHLCMulti5(sessionStart, sessionEnd, ohlc);
+
+if entriesToday(date) = 0 and tw(startTrading, stopTrading) then begin
+	if patternFast(ptnLY, ohlc) and not patternFast(ptnLN, ohlc) then
+		buy next bar at maxList(highW(0), highW(1)) stop;
+	if patternFast(ptnSY, ohlc) and not patternFast(ptnSN, ohlc) then	
+		sellShort next bar at maxList(lowW(0), lowW(1)) stop;
+end;
+
+
+
+setStopPosition;
+if stopLoss <> 0 then setStopLoss(stopLoss);
+if takeProfit <> 0 then setProfitTarget(takeProfit);
+
+if numMcSimulation <> 0 then
+//	ExportToValidator(1100101, numMcSimulation);
+	WriteDailiesCTitanReports_Validator_RND(1060101, 1);

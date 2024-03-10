@@ -1,0 +1,43 @@
+{
+	Kevin Bruton 2024-03-09
+	Apply a change based on ATR
+}
+
+input:
+	ohlc[X](NumericArrayRef),
+	probabilityOfChangePct(NumericSimple), 	// Probability that a change will be applied on each OHLC value
+	maxChangePct(NumericSimple);		// Max. percentage of ATR to be applied to each OHLC value
+
+vars:
+	shouldChange(false),
+	trueRange(0),
+	change(0),
+	idx(0),
+	atr(0),
+	prevClose(0);
+array:
+	ohlcTrueRange[6](0);
+
+// Calculate average true range on the 6 candles provided
+while idx <= array_getMaxIndex(ohlc) begin
+	if idx+4 < array_getMaxIndex(ohlc) then // there is a previous candle
+		prevClose = ohlc[idx+4+3]
+	else
+		prevClose = ohlc[idx+3];
+	ohlcTrueRange[idx/4] = maxList(prevClose, ohlc[idx+1]) - minList(prevClose, ohlc[idx+2]);
+	idx += 4;
+end;
+atr = array_sum(ohlcTrueRange, 0, array_getMaxIndex(ohlcTrueRange)) / (array_getMaxIndex(ohlcTrueRange) + 1);
+
+for idx = 0 to array_getMaxIndex(ohlc) begin
+	if ohlc[idx] <> 0 then begin
+		shouldChange = random(100) < probabilityOfChangePct;
+		if shouldChange then begin
+			change = atr * random(maxChangePct) / 100;
+			if random(100) > 50 then
+				change = -change;
+			ohlc[idx] = ohlc[idx] + change;
+		end;
+	end;
+end;
+

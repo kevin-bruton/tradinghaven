@@ -1,0 +1,141 @@
+{ The function must be active on the strategy before doing the optimization! (if not there is the possibility
+that there is no reset of global variable 0 (line 30). You can't do the reset in "getappinfo(aioptimizing) = 1 " because otherwise
+it would reset at every optimization cycle!
+For everything to work, global variables must not be active... when in doubt, I put GV_SetInteger(0,0) and say what I say on the first line
+about these comments... but you never know
+every time optimization starts the strategy shuts down entirely. So you will never see the part ( getappinfo(aioptimizing) = 0 ) until the last iteration, which
+It's exactly what's on the chart by default
+
+Problems: if you have a setexitonclose at lastbaronchart the last trade is not considered
+if you use "open of tomorrow" "lastbaronchart" doesn't work (workaround in https://www.multicharts.com/discussion/viewtopic.php?t=10402 but I don't shit it)
+THERE MUST BE AN ACTIVE PROCESS THAT USES GLOBAL VARIABLES! EVEN A SIMPLE INDICATOR IN THE SAME STRATEGY CHART IS ENOUGH. OTHERWISE BETWEEN AN OPTIMIZATION
+AND THE OTHER WFA RESET THE WHOLE COUNT AND I NEVER GET THE OOS
+//////////////////////////////////
+input: ValidatorExportMode(0);
+If ValidatorExportMode=1 then writedailiesCTitanReports_Validator_RND(1060101, ValidatorExportMode);
+//////////////////////////////////
+}
+input:
+	firstdate(NumericSimple), // starting date to write results
+	simNum(NumericSimple);    // simulation number (iteration by the optimiser)
+	
+var:	
+     fullFN(""), ValidatorDir("C:\Validator"), start(false), OE(0),DOE(0),dailyprofit(0),cc(0),gap(0),trange(0),
+	Ntrades(0),NTradesDelta(0),NTNew(0),ii(0), MP(0), lastWrittenDate(0), lastWrittenNtrades(0), LastBarVar(0),LastIndexes(0),IterationNFile("");
+
+var: MyIndex(0), CheckSet(-1), fullFNRecap(""), strategyName(""), metrics(""), hash(""), isOptimising(false);
+
+strategyName = StringCleanFileNames(symbolroot + "_" + getstrategyname,1);
+isOptimising = getAppInfo(aiOptimizing) = 1;
+
+//if lastBarOnChart then begin
+	//hash = "_" + NumToStr(exportIndex, 0) + "_" + FormatTime("hhmmss",ElTimeToDateTime_s(currentTime_s)) + "_" + NumToStr(random(1000000000),0);
+	//Print("currentTime: ", hash);
+//end;
+
+once ( not isOptimising ) begin
+	if not ELC.PathExists(ValidatorDir) then ELC.DirectoryCreate(ValidatorDir);
+	if not ELC.PathExists(ValidatorDir+"\"+strategyName ) then ELC.DirectoryCreate(ValidatorDir+"\"+strategyName );
+	if not ELC.PathExists(ValidatorDir+"\"+strategyName +"\RND") then ELC.DirectoryCreate(ValidatorDir+"\"+strategyName +"\RND");	
+	fullFN = ValidatorDir+"\"+strategyName +"\RND\Default.txt";
+	fullFNRecap = ValidatorDir+"\"+strategyName +"\RND\Default_Recap.txt";
+	filedelete(fullFN);
+	filedelete(fullFNRecap);
+end;
+	
+once ( isOptimising ) begin 
+	fullFNRecap = ValidatorDir+"\"+strategyName+"\RND\Iterations_Recap.txt";
+	{if MyIndex = 0 then begin
+		filedelete(fullFNRecap); //cancella il file solo se inizia l'ottimizzazione
+		
+		LastIndexes = 1;
+		IterationNFile = (ValidatorDir+"\"+MyStrategyName+"\RND\Iteration_"+NumToStr(LastIndexes,0)+".txt");
+	end;
+	}
+	fullFN = ValidatorDir + "\" + strategyName + "\RND\Iteration_" + NumToStr(simNum, 0) + "_" + NumToStr(Random(10000),0) + ".txt";
+	// filedelete(fullFN); //non serve ma non si sa mai
+end;
+	
+
+once begin
+	lastWrittenDate = CalcDate(firstdate,-1);
+	LastBarVar = 0;
+end;
+
+OE = i_openequity;
+cc = i_currentcontracts*i_marketposition;
+MP = i_marketposition;
+
+if d>=firstdate then begin
+	if d=firstdate and d<>d[1] and MP<>0 then begin
+		Ntrades=1;
+		NTradesDelta = TotalTrades;
+	end else begin
+		NTNew = (TotalTrades-NTradesDelta) - NTrades;
+		If NTNew > 0 then Begin
+			for ii = 0 to NTNew - 1 Begin
+				NTrades = NTrades + 1;
+			end;
+		end;
+	end;
+end;
+// only on a new starting of the day
+
+if d>d[1] and BarStatus(1) = 2 then begin
+	// gap yesterday-today (it's written on today!)
+	gap = (open-close[1])*cc[1]*bigpointvalue;
+		
+	// TrueRange of yesterday
+	trange = TrueRangeD(1)*bigpointvalue;
+	// daily profit of yesterday
+	DOE = OE[1];
+	dailyprofit = DOE - DOE[1];  // profits of today at 23.59 Local time
+		
+	if start=false and d>firstdate and dailyprofit<>0 then start = true; // prints only after the first day of profits
+		
+	if start then begin
+		while (lastWrittenDate < date[1]) begin
+			lastWrittenDate = CalcDate(lastWrittenDate,1);
+			if (lastWrittenDate = date[1]) then begin
+				Print(File(fullFN),Date2String(date[1])," ",dailyprofit:0:5," ",cc[1]:0:0," ",gap[1]:0:5," ",trange:0:5," ",Ntrades:0:0);
+				lastWrittenNtrades = Ntrades;
+			end else
+				Print(File(fullFN),Date2String(lastWrittenDate)," ",0:0:5," ",0:0:0," ",0:0:5," ",0:0:5," ",lastWrittenNtrades:0:0);
+		end;
+	end;
+end;
+// only if it's the last bar of the chart and it's a Saturday or Sunday
+if LastBarOnChart {and CurrentDate>d} and LastBarVar = 0 then begin
+	LastBarVar = 1;
+	// TrueRange of today
+	trange = TrueRangeD(0)*bigpointvalue;
+		
+	// daily profit of today
+	DOE = OE;
+	dailyprofit = DOE - DOE[1];
+		
+	Print(File(fullFN),Date2String(date)," ",dailyprofit:0:5," ",cc:0:0," ",gap:0:5," ",trange:0:5," ",Ntrades:0:0);
+		
+	{ONLY FOR TITAN EXPORT
+	// if it's Saturday or Sunday, add an extra line saying the market it's closed
+	lastWrittenDate = date;
+	while (lastWrittenDate <= CurrentDate) begin
+	lastWrittenDate = CalcDate(lastWrittenDate,1);
+	Print(File(fullFN),Date2String(lastWrittenDate)," ",0:0:5," ",0:0:0," ",0:0:5," ",0:0:5," ",Ntrades:0:0);
+	if dayofweek(lastWrittenDate) = 6 then break;
+	end;}
+		
+	metrics = NumToStr(netprofit,2)+" "+NumToStr(maxiddrawdown,2)+" "+NumToStr(netprofit/iff(maxiddrawdown<>0,maxiddrawdown,-1)*-1,2)+
+	" "+NumToStr(grossprofit/iff(grossloss<>0,grossloss,-1)*-1,2)+" "+NumToStr(netprofit/iff(totaltrades<>0,totaltrades,1),2)+
+	" "+NumToStr(totaltrades,0)+" "+NumToStr(numwintrades/iff(totaltrades<>0,totaltrades,1)*100,2)+NewLine;
+
+	FileAppend(fullFNRecap,metrics);
+	//Print(fullFNRecap,netprofit:0:2," ",maxiddrawdown:0:2," ",(netprofit/iff(maxiddrawdown<>0,maxiddrawdown,-1)*-1):0:2," ",
+	//(grossprofit/iff(grossloss<>0,grossloss,-1)*-1):0:2," ",(netprofit/iff(totaltrades<>0,totaltrades,1)):0:2," ",totaltrades," ",(numwintrades/iff(totaltrades<>0,totaltrades,1)*100):0:2);
+	 
+	//FileAppend("C:\Validator\ES_zzzzz2\WFA\Nocanc\bubu.txt",numtostr(MyIndex,0)); DEBUGGING.....
+end;
+//if MP<>MP[1] and MP[1]<>0 then Print(File(fullFN2),Date2String(date[1])," ",positionprofit(1):0:5," ");
+
+ExportToValidator = 0;
+

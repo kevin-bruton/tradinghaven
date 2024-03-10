@@ -1,4 +1,10 @@
-from ibapi.contract import Contract
+from ib_insync import Contract
+
+def contract(symbol):
+    if symbol == 'DAX':
+        return Contract(conId=540729519, symbol='DAX', exchange='EUREX', currency='EUR')
+
+""" from ibapi.contract import Contract
 
 def contract(symbol):
     if symbol == 'DAX':
@@ -8,4 +14,4 @@ def contract(symbol):
         contract.secType = "CONTFUT"
         contract.currency = "EUR"
         contract.exchange = "EUREX"
-        return contract
+        return contract """
