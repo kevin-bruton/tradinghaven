@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import datetime
 
 strategies = []
@@ -25,7 +26,7 @@ def _isStrategyIdentifier(content):
 def _processStrategyIdentifier(logentry_ts, content):
   global strategies
   columns = content.split(';')
-  strategyId = columns[1]
+  strategyId = int(columns[1])
   strategyName = columns[44][1:-1]
   workspace = columns[43][1:-1]
   account = columns[42][1:-1]
@@ -49,42 +50,55 @@ def _processStrategyIdentifier(logentry_ts, content):
       'regDate': _tsToStr(logentry_ts)
       })
   
-def _isOnorderEvent(content):
+def _isOrderEvent(content):
   columns = content.split(' ')
   return len(columns) > 0 \
-    and columns[0] == 'CProfile::OnOrder'
+    and 'PDS' in columns[0]
 
-def _processOnorderEvent(content):
+def _processOrderEvent(content):
   global orders
-  orderId = _getKeyValue(content, 'BrIDStr')
+  print('Processing order event. Num orders:', len(orders))
+  state = _getKeyValue(content, 'State')
+  if state != 'Transmitted' and state != 'Filled':
+    print('  Ignoring event. State:', state)
+    return
+  orderId = int(_getKeyValue(content, 'OrderID').split(',')[0])
   foundOrders = [o for o in orders if o['orderId'] == orderId]
   if len(foundOrders) == 0:
     order = { 'orderId': orderId }
     orders.append(order)
     foundOrders = [order]
+
   order = foundOrders[0]
-  order['strategyId'] = _getKeyValue(content, 'ELTraderID')
+  brokerId = int(_getKeyValue(content, 'BrIDStr'))
+  initialPrice = float(_getKeyValue(content, 'Price'))
+  order['strategyId'] = int(_getKeyValue(content, 'ELTraderID'))
   order['generated'] = _getKeyValue(content, 'Gen')
   order['final'] = _getKeyValue(content, 'Final')
-  order['state'] = _getKeyValue(content, 'State')
-  order['fillQty'] = int(_getKeyValue(content, 'FillQty'))
-  order['fillPrice'] = float(_getKeyValue(content, 'FillPrice'))
-  
+  order['state'] = state
+  if orderId == brokerId and state == 'Transmitted':
+    order['initialPrice'] = initialPrice
+  elif state == 'Transmitted':
+    order['brokerId'] = brokerId
+  elif state == 'Filled':
+    order['fillPrice'] = float(_getKeyValue(content, 'FillPrice'))
+    order['fillQty'] = int(_getKeyValue(content, 'FillQty'))
+  print('  Processed event. orderId:', orderId, 'brId:', brokerId, 'state:', state, 'New num orders:', len(orders))
 
 def processLogentry(logentry_ts, content):
   if _isStrategyIdentifier(content):
     _processStrategyIdentifier(logentry_ts, content)
-  elif _isOnorderEvent(content):
-    _processOnorderEvent(content)
+  elif _isOrderEvent(content):
+    _processOrderEvent(content)
 
 def getOrders():
   global orders
-  temp_orders = orders
+  temp_orders = deepcopy(orders)
   orders = []
   return temp_orders
 
 def getStrategies():
   global strategies
-  temp_strategies = strategies
+  temp_strategies = deepcopy(strategies)
   strategies = []
   return temp_strategies

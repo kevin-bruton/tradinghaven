@@ -65,9 +65,9 @@ def processTradingStatus():
   strategyUpdateHtml = '<div>Last strategy update: '
   dataConnectionHtml = '<div>Data connection status: '
   symbolStatusHtml = '<br><br><div><strong>POSITIONS</strong></div><table class="table"><thead><tr><th>Symbol</th><th>Broker</th><th>Strategy</th><th>Aligned?</th></tr></thead><tbody>'
-  strategyStatusHtml = '<br><br><div><strong>STRATEGIES</strong></h2><table class="table"><thead><tr><th>Strategy Name</th><th>Auto Trading</th><th>Position</th></tr></thead><tbody>'
+  strategyStatusHtml = '<br><br><div><strong>STRATEGIES</strong></h2><table class="table"><thead><tr><th>Strategy Name</th><th>Auto Trading</th><th>Mkt Position</th><th>Profit</th><th>Profit Factor</th><th>Ret/DD</th><th>Num Trades</th></tr></thead><tbody>'
   ts = datetime.now().timestamp()
-  print(tsToStr(ts) + ' - Processing trading status...')
+  #print(tsToStr(ts) + ' - Processing trading status...')
   status_dir = get_config_value('mc_status_dir')
   onlyfiles = [f for f in listdir(status_dir) if isfile(join(status_dir, f))]
   brokerPositions = {}
@@ -87,6 +87,7 @@ def processTradingStatus():
           didReadFile = True
       except Exception as e:
         print(tsToStr(ts) + ' - Error reading file ' + file + ': ' + str(e))
+        continue
     if file == 'broker_status.json':
       brokerUpdateHtml += content['computerDatetime'] + '</div>'
       dataConnectionHtml += '<span class="tag is-success">OK</span>' \
@@ -115,18 +116,23 @@ def processTradingStatus():
         strategyUpdateHtml += content['computerDatetime'] + '</div>'
       strategyStatusHtml += f'<tr><td>{strategyName}</td><td>'
       strategyStatusHtml +='<span class="tag is-success">OK</span>' if content["autoTradingEnabled"] else '<span class="tag is-danger">NOK</span>'
-      strategyStatusHtml += f'</td><td>{content["position"]}</td></tr>'
+      #strategyStatusHtml += f'</td><td>{content["position"]}</td>'
+      strategyStatusHtml += f'<td>{content["marketPosition"]}</td>'
+      strategyStatusHtml += f'<td>{content["netProfit"]}</td>'
+      strategyStatusHtml += f'<td>{content["profitFactor"]}</td>'
+      strategyStatusHtml += f'<td>{content["retDd"]}</td>'
+      strategyStatusHtml += f'<td>{content["numTrades"]}</td></tr>'
       # Get strategy positions
       if accountId not in strategyPositions:
         strategyPositions[accountId] = {}
       if symbol not in strategyPositions[accountId]:
         strategyPositions[accountId][symbol] = 0
-      strategyPositions[accountId][symbol] += content['position']
+      strategyPositions[accountId][symbol] += content['marketPosition']
       # Check for strategy position changes
-      if content['position'] != content['lastPosition']:
+      if content['marketPosition'] != content['lastMarketPosition']:
         msg1 = f'Position change detected.'
         msg2 = f'{accountId} - {symbol} - {strategyName}.'
-        msg3 = f'{content["lastPosition"]} -> {content["position"]}'
+        msg3 = f"{content['lastMarketPosition']} -> {content['marketPosition']}"
         sendConnectionMessage(ts, f'{msg1}\n  {msg2}\n  {msg3}')
         logStrategyPositionChanges(ts, accountId, strategyName, msg1 + ' ' + msg2 + ' ' + msg3)
       # Check for auto trading status changes
@@ -140,8 +146,8 @@ def processTradingStatus():
         logStrategyConnections(ts, accountId, strategyName, True)
 
   # Check for position mismatches
-  for accountId in brokerPositions:
-    for symbol in brokerPositions[accountId]:
+  for accountId in strategyPositions:
+    for symbol in strategyPositions[accountId]:
       symbolStatusHtml += f'<tr><td>{symbol}</td><td>{brokerPositions[accountId][symbol]}</td><td>{strategyPositions[accountId][symbol]}</td><td><span class="tag ' + \
         ('is-success">OK' if brokerPositions[accountId][symbol] == strategyPositions[accountId][symbol] else 'is-danger">NOK') + \
         '</span></td></tr>'

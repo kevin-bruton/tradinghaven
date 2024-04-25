@@ -68,6 +68,7 @@ def init_db():
       CREATE TABLE IF NOT EXISTS orders
         (
           orderId PRIMARY KEY,
+          brokerId,
           strategyId,
           symbolRoot,
           generated,
@@ -75,6 +76,7 @@ def init_db():
           execTime,
           fillQty,
           execQty,
+          initialPrice,
           fillPrice,
           execPrice,
           orderType,

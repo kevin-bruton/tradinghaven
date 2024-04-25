@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import time
 import asyncio
 from ib_insync import *
 from log_analyser.read_logs import read_latest_log
@@ -13,13 +14,15 @@ def run_ib():
   def _processFills(fills):
     global saved_execution_ids
     # Read latest logfile and save new entries
+    time.sleep(1)
     read_latest_log()
+    time.sleep(1) 
     # only process executions that have not already been saved
     fills = [f for f in fills if f.execution.execId not in saved_execution_ids]
 
     executions = []
     for f in fills:
-      orderId = int(f.execution.orderId)
+      brokerId = int(f.execution.orderId)
       symbolRoot = f.contract.symbol
       execTime = f.execution.time
       action = f.execution.side
@@ -38,37 +41,37 @@ def run_ib():
         limitPrice = 'Not MC'
       commission = f.commissionReport.commission
       realizedPnl = f.commissionReport.realizedPNL
-      fill = (
-        orderId,
-        symbolRoot,
-        execTime,
-        action,
-        execQty,
-        execPrice,
-        orderType,
-        stopPrice,
-        limitPrice,
-        commission,
-        realizedPnl,
-        symbolRoot,
-        execTime,
-        action,
-        execQty,
-        execPrice,
-        orderType,
-        stopPrice,
-        limitPrice,
-        commission,
-        realizedPnl
-      )
-      executions.append(fill)
+      execution = {
+        "brokerId": brokerId,
+        "symbolRoot": symbolRoot,
+        "execTime": execTime,
+        "action": action,
+        "execQty": execQty,
+        "execPrice": execPrice,
+        "orderType": orderType,
+        "stopPrice": stopPrice,
+        "limitPrice": limitPrice,
+        "commission": commission,
+        "realizedPnl": realizedPnl,
+        "symbolRoot": symbolRoot,
+        "execTime": execTime,
+        "action": action,
+        "execQty": execQty,
+        "execPrice": execPrice,
+        "orderType": orderType,
+        "stopPrice": stopPrice,
+        "limitPrice": limitPrice,
+        "commission": commission,
+        "realizedPnl": realizedPnl
+      }
+      executions.append(execution)
     # Save IB order information in the orders table 
     #   (update entries with the same orderId)
     saved = save_ib_orders(executions)
     if saved == len(fills):
       saved_fill_ids = [f.execution.execId for f in fills]
       saved_execution_ids.extend(saved_fill_ids)
-    print('Saved', saved, 'IB Execution Orders')
+    print('Saved', saved, 'IB Execution Orders. brokerId:', fills[0].execution.orderId)  
     # Send Telegram message about the order execution
     #   when realizedPnl != 0
     #print('Num fills:', len(fills), fills[0] if len(fills) == 1 else '')
@@ -76,15 +79,23 @@ def run_ib():
       _sendExecutionMessage(fills[0])
 
   def _sendExecutionMessage(fill):
-    print('_sendExecutionMessage. realizedPnl:', fill.commissionReport.realizedPNL, '; commissionReport:', fill.commissionReport, '; execution:', fill.execution)
+    print('_sendExecutionMessage. brokerId:', fill.execution.orderId, '; realizedPnl:', fill.commissionReport.realizedPNL)
     if fill.commissionReport.realizedPNL != 0:
       order = get_order(fill.execution.orderId)
       print('_sendExecutionMessage. order:', order)
-      send_position_message(order)
+      #send_position_message(order)
 
   def _executionPerformed(trade, fill):
-    print('Caught executionDetailEvent', fill.contract.symbol, fill.execution.side, fill.execution.shares)
+    print('\nCaught executionDetailEvent', fill.contract.symbol, fill.execution.side, fill.execution.shares, fill.commissionReport.realizedPNL)
+    #print('TRADE:', trade)
+    #print('FILLS:', ib.fills())
     _processFills([fill])
+
+  def _commissionReported(trade, fill, commissionReport):
+    #time.sleep(1)
+    print('\nCaught commissionReportEvent', fill.contract.symbol, fill.execution.side, fill.execution.shares, 'profit:', commissionReport.realizedPNL, 'orderId:', fill.execution.orderId)
+    _processFills([fill])
+
 
   def _process_api_request(api_request):
     if api_request['name'] == 'accounts':
@@ -121,7 +132,8 @@ def run_ib():
   ib.connect('127.0.0.1', 4002, clientId=3)
   fills = ib.fills()
   _processFills(fills)
-  ib.execDetailsEvent += _executionPerformed
+  #ib.execDetailsEvent += _executionPerformed
+  ib.commissionReportEvent += _commissionReported
 
   while True:
     try:

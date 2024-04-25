@@ -22,6 +22,7 @@ def send_message(text):
   chat_id = get_config_value('telegram_chat_id')
 
   if token and chat_id:
+    response = { 'error_code': 0, 'description': 'No response' }
     url = f'https://api.telegram.org/bot{token}/sendMessage'
     data = {
       'chat_id': chat_id,

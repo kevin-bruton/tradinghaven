@@ -113,13 +113,14 @@ def read_all_logs():
 
   save_timestamp(last_entry_ts, 'last_trading_server_log_read')
   print('  Finished processing Trading Server logs at', datetime.now())
-  strategies_inserted = save_strategies(getStrategies())
-  orders_inserted = save_log_orders(getOrders())
-  print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders\n')
+  orders = getOrders()
+  strategies = getStrategies()
+  print('  read_all_logs saving ', len(orders), 'orders and', len(strategies), 'strategies to the database...')
+  strategies_inserted = save_strategies(strategies)
+  orders_inserted = save_log_orders(orders)
+  print('  Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders\n')
         
-
 def read_latest_log():
-
   try:
     logfile, logfile_modified_ts = get_latest_logfilepath()
   except Exception as e:
@@ -128,14 +129,15 @@ def read_latest_log():
   if logfile_not_modified_since_last_read(logfile_modified_ts):
     return
   
+  print("\nReading latest log file:", logfile, '...')
   with open(logfile, 'r') as f:
     #global last_filled_order_id
     last_entry_ts = get_timestamp('last_trading_server_log_read')
     #last_filled_order_id = get_last_filled_order_id()
 
     # Read log entries
-    print('\nUpdating orders and positions at', datetime.now(), '...')
-    for line in logfile:
+    print('\nReading latest log file:\n', logfile,'\nUpdating orders and positions at', datetime.now(), '...')
+    for line in f:
       logentry_ts, content = get_logentry_ts_and_content(line)
       if logentry_ts == None or content == None:
         continue
@@ -151,7 +153,11 @@ def read_latest_log():
 
     save_timestamp(last_entry_ts, 'last_trading_server_log_read')
     print('  Finished processing Trading Server logs at', datetime.now())
-    strategies_inserted = save_strategies(getStrategies())
-    orders_inserted = save_log_orders(getOrders())
+    orders = getOrders()
+    strategies = getStrategies()
+    print('  read_latest_log saving ', len(orders), 'orders and', len(strategies), 'strategies to the database...')
+    print('  first order:', orders[0] if len(orders) > 0 else 'None')
+    strategies_inserted = save_strategies(strategies)
+    orders_inserted = save_log_orders(orders)
     print('     Inserted/updated', strategies_inserted, 'strategies,', orders_inserted, 'orders\n')
 

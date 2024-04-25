@@ -10,6 +10,9 @@ from db.timestamps import get_timestamp, save_timestamp
 from utils.config import get_config_value
 from utils.telegram import send_position_message
 
+# TOBE DELETED: THIS IS AN OLD IMPLEMENTATION
+
+"""
 strategies = []
 orders = []
 positions = []
@@ -102,15 +105,15 @@ def process_strategy_order(logentry_ts, content):
   if is_order_filled:
     last_filled_order_id = br_id
   
-def is_onorder_event(content):
-  columns = content.split(' ')
+def is_order_event(content):
+  columns = content.split('[')
   return len(columns) > 0 \
-    and columns[0] == 'CProfile::OnOrder'
+    and 'Updated order' in columns[0]
 
-def process_onorder_event(logentry_ts, content):
+def process_order_event(logentry_ts, content):
   global last_filled_order_id
-  columns = content.split(';')
-  br_id = int(columns[3].split('=')[1])
+  #columns = content.split(';')
+  br_id = get_key_value(content, 'BrID')
   found_orders = [o for o in orders if o['br_id'] == br_id]
   if len(found_orders) == 0:
     orders.append({ 'br_id': br_id })
@@ -315,12 +318,13 @@ def process_logentry(line, last_read_log_entry_ts=0):
     process_strategy_identifier(logentry_ts, content)
   if is_strategy_order(content):
     process_strategy_order(logentry_ts, content)
-  elif is_onorder_event(content):
-    process_onorder_event(logentry_ts, content)
-  elif is_popactiveorder_event(content):
-    process_popactiveorder_event(logentry_ts, content)
+  elif is_order_event(content):
+    process_order_event(logentry_ts, content)
+  #elif is_popactiveorder_event(content):
+  #  process_popactiveorder_event(logentry_ts, content)
   elif is_set_position(content):
     process_set_position(logentry_ts, content)
 
   return logentry_ts
 
+"""
