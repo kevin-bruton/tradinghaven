@@ -107,6 +107,10 @@ def run_ib():
       month = int(api_request['day_YYYYMMDD'][4:6])
       day = int(api_request['day_YYYYMMDD'][6:8])
       end_dt = datetime(year, month, day, 23, 59, 59)
+      print('Requesting IB for data. Symbol:', api_request['symbol'], 'Date:', end_dt)
+      #def errorHandler(reqId, errorCode, errorString, contract):
+      #  print('Data Error Handler:', reqId, errorCode, errorString)
+      #ib.errorEvent += errorHandler
       bars = ib.reqHistoricalData(
         contract(api_request['symbol']),
         endDateTime=end_dt,
@@ -116,6 +120,8 @@ def run_ib():
         useRTH=True,
         formatDate=1
       )
+      print('Num bars received:', len(bars))
+
       only_bars_on_the_day = [b for b in bars if b.date.strftime('%Y-%m-%d') == datetime(year, month, day).strftime('%Y-%m-%d')]
       set_res('data', only_bars_on_the_day)
 
@@ -130,6 +136,9 @@ def run_ib():
   
   ib = IB()
   ib.connect('127.0.0.1', 4002, clientId=3)
+  print('********************************************')
+  print('            CONNECTED TO IB')
+  print('********************************************')
   fills = ib.fills()
   _processFills(fills)
   #ib.execDetailsEvent += _executionPerformed

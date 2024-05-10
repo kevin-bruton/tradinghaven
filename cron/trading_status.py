@@ -108,6 +108,7 @@ def processTradingStatus():
             if accountId not in brokerPositions:
               brokerPositions[accountId] = {}
             brokerPositions[accountId][symbol] = int(account['symbols'][symbol])
+  
     else:
       accountId = content['accountId']
       symbol = content['symbol']
@@ -146,31 +147,32 @@ def processTradingStatus():
         logStrategyConnections(ts, accountId, strategyName, True)
 
   # Check for position mismatches
-  for accountId in strategyPositions:
-    for symbol in strategyPositions[accountId]:
-      symbolStatusHtml += f'<tr><td>{symbol}</td><td>{brokerPositions[accountId][symbol]}</td><td>{strategyPositions[accountId][symbol]}</td><td><span class="tag ' + \
-        ('is-success">OK' if brokerPositions[accountId][symbol] == strategyPositions[accountId][symbol] else 'is-danger">NOK') + \
-        '</span></td></tr>'
-      if symbol not in positionMismatches:
-        positionMismatches[symbol] = False
-      isPositionMismatch = brokerPositions[accountId][symbol] != strategyPositions[accountId][symbol]
-      if isPositionMismatch and not positionMismatches[symbol]:
-        positionMismatches[symbol] = True
-        msg1 = f'Position mismatch detected.'
-        msg2 = f'{accountId} - {symbol}.'
-        msg3 = f'Broker position: {brokerPositions[accountId][symbol]}; Strategy position: {strategyPositions[accountId][symbol]}'
-        sendConnectionMessage(ts, msg1 + '\n  ' + msg2 + '\n  ' + msg3)
-        logPositionMismatch(ts, msg1 + ' ' + msg2 + ' ' + msg3)
-      if not isPositionMismatch and positionMismatches[symbol]:
-        msg1 = f'Position mismatch resolved.'
-        msg2 = f'{accountId} - {symbol}.'
-        msg3 = f'Broker position: {brokerPositions[accountId][symbol]}; Strategy position: {strategyPositions[accountId][symbol]}'
-        sendConnectionMessage(ts, msg1 + '\n  ' + msg2 + '\n  ' + msg3)	
-        logPositionMismatch(ts, msg1 + ' ' + msg2 + ' ' + msg3)
-      positionMismatches[symbol] = isPositionMismatch
-  html += brokerUpdateHtml + strategyUpdateHtml + dataConnectionHtml + symbolStatusHtml + '</tbody></table>' + strategyStatusHtml + '</tbody></table></div></body></html>'
-  with open(get_config_value('log_dir') + 'live_status.html', 'w') as f:
-    f.write(html)
+  if len(brokerPositions) > 0 and len(strategyPositions) > 0:
+    for accountId in strategyPositions:
+      for symbol in strategyPositions[accountId]:
+        symbolStatusHtml += f'<tr><td>{symbol}</td><td>{brokerPositions[accountId][symbol]}</td><td>{strategyPositions[accountId][symbol]}</td><td><span class="tag ' + \
+          ('is-success">OK' if brokerPositions[accountId][symbol] == strategyPositions[accountId][symbol] else 'is-danger">NOK') + \
+          '</span></td></tr>'
+        if symbol not in positionMismatches:
+          positionMismatches[symbol] = False
+        isPositionMismatch = brokerPositions[accountId][symbol] != strategyPositions[accountId][symbol]
+        if isPositionMismatch and not positionMismatches[symbol]:
+          positionMismatches[symbol] = True
+          msg1 = f'Position mismatch detected.'
+          msg2 = f'{accountId} - {symbol}.'
+          msg3 = f'Broker position: {brokerPositions[accountId][symbol]}; Strategy position: {strategyPositions[accountId][symbol]}'
+          sendConnectionMessage(ts, msg1 + '\n  ' + msg2 + '\n  ' + msg3)
+          logPositionMismatch(ts, msg1 + ' ' + msg2 + ' ' + msg3)
+        if not isPositionMismatch and positionMismatches[symbol]:
+          msg1 = f'Position mismatch resolved.'
+          msg2 = f'{accountId} - {symbol}.'
+          msg3 = f'Broker position: {brokerPositions[accountId][symbol]}; Strategy position: {strategyPositions[accountId][symbol]}'
+          sendConnectionMessage(ts, msg1 + '\n  ' + msg2 + '\n  ' + msg3)	
+          logPositionMismatch(ts, msg1 + ' ' + msg2 + ' ' + msg3)
+        positionMismatches[symbol] = isPositionMismatch
+    html += brokerUpdateHtml + strategyUpdateHtml + dataConnectionHtml + symbolStatusHtml + '</tbody></table>' + strategyStatusHtml + '</tbody></table></div></body></html>'
+    with open(get_config_value('log_dir') + 'live_status.html', 'w') as f:
+      f.write(html)
 
       
 
