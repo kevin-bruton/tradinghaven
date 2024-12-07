@@ -1,0 +1,23 @@
+[Wsp\%Window_Num%]
+	ContainerHeight = '554'
+	ContainerWidth = '1526'
+	Flags = '0'
+	Height = '184'
+	Left = '259'
+	MinX = '-1'
+	MinY = '-1'
+	State = '1'
+	Top = '30'
+	ViewType = '0'
+	Width = '763'
+
+[Wsp\%Window_Num%\ChartManager]
+	ChartCount = '1'
+	OFFSeriesCount = '0'
+
+[Wsp\%Window_Num%\ChartManager\Background]
+	BackgroundColor = '0'
+
+[Wsp\%Window_Num%\ChartManager\CaptionShow]
+	ShowCaption = '1'
+

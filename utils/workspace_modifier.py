@@ -1,12 +1,12 @@
 
 
-base_dir = 'C:/AcademyUnger/Backtest_Workspaces/'
-workspace = 'Portfolio1'
+base_dir = 'C:/_Workspaces/'
+workspace = 'MDD_pt1_Tradestation_November24'
 
 print('\nIn what directory is the workspace you want to modify?')
-base_dir = input('[Default = C:/AcademyUnger/Backtest_Workspaces/]: ') or base_dir
+base_dir = input('[Default = ' + base_dir + ']: ') or base_dir
 print('\nWhat workspace do you want to modify?')
-workspace = input('[Default = Portfolio1]: ') or workspace
+workspace = input('[Default = ' + workspace + ']: ') or workspace
 print('\nWhat do you want to set the TitanExportMode to?')
 export_mode = input('0 = Disable export, 1 = Enable export: ')
 new_workspace = workspace + '_Export' if export_mode == '1' else workspace + '_NoExport'

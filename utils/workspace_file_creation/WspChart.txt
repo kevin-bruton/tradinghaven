@@ -1,0 +1,1885 @@
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%]
+	LSeriesNum = '0'
+	PencentHeight = '1'
+	RSeriesNum = '0'
+	SeriesCount = '1'
+	invert Scale = '0'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0]
+	DataNumber = '0'
+	DrawingsCount = '0'
+	ResolutionLinkId = '0'
+	ResolutionWsGlobal = '0'
+	SeriesType = '1'
+	SymbolLinkColor = '0'
+	SymbolLinkId = '0'
+	SymbolWsGlobal = '0'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\DataSeries]
+	MergeDataSources = '0'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\DataSeries\Request]
+	AnchorFinishDate = '0'
+	BackTypeId = '274'
+	BackTypeName = 'Days Back'
+	BreakOnSession = '1'
+	BuildDayFromMinutes = '0'
+	CallPut = '0'
+	CapacityId = '60'
+	CapacityName = ''
+	Category = '0'
+	CategoryFilter = '0'
+	CategoryFilterName = ''
+	ChartTypeId = '0'
+	ChartTypeName = 'Regular'
+	CumulativeDeltaChartType = '2'
+	CustomResolutionsInfo = '0;8;Regular;1;8;'
+	CustomResolutionsParams = ''
+	DataFeed = '%Data_Feed%'
+	DeltaBaseOnResolution = '2'
+	DeltaType = '1'
+	Description = '%Symbol_Desc%'
+	Exchange = '%Exchange%'
+	ExpirationDate = '0'
+	FieldId = '201'
+	FieldName = 'Trade'
+	FinishDate2Id = '45632'
+	FinishDate2Name = ''
+	FinishDateId = '45632'
+	FinishDateName = ''
+	FootPrintChartType = '0'
+	KagiReversal = '1'
+	KagiReversalPercent = '1'
+	KagiReversalType = '0'
+	LineBreakCount = '3'
+	Minor = '1'
+	PBHelperNowChngd = '0'
+	PFigureBasis = '1'
+	PFigureBoxSize = '1'
+	PFigureReversal = '3'
+	PriceScale = '105'
+	RangeId = '1'
+	RangeName = 'PERIOD'
+	RealTimeCategory = '0'
+	RealTimeDataFeed = '%Data_Feed%'
+	RealTimeExchange = '%Exchange%'
+	RealTimeSymbol = '%Symbol%'
+	RenkoBasis = '0'
+	RenkoBoxSize = '1'
+	RenkoBoxSizeType = '0'
+	RequestOffline = '0'
+	ResolutionId = '2'
+	ResolutionName = 'Minute'
+	ResolutionSizeId = '%Timeframe%'
+	ResolutionSizeName = ''
+	SessionsId = '0'
+	SessionsName = 'Default'
+	ShowDelta = '0'
+	ShowPercent = '0'
+	ShowPhantomBars = '1'
+	ShowRealOpen = '0'
+	ShowWick = '0'
+	StartDateId = '40178'
+	StartDateName = ''
+	StrikePrice = ''
+	Symbol = '%Symbol%'
+	TPOBaseOnResolution = '0'
+	TPOBlockSize = '30'
+	TPOBlockSizeResolution = '2'
+	TPOProfileBuildFromRange = '0'
+	TPOProfileBuildFromTime = '28800'
+	TPOResolution = '4'
+	TPOResolutionSize = '1'
+	TimeZoneId = '2'
+	TimeZoneName = 'Exchange'
+	Version = '2'
+	VolumeType = '249'
+	VolumeTypeName = 'Trade Volume'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\IntervalObject]
+	AxisType = '0'
+	Center = '0'
+	CustomNullsCount = '-1'
+	CustomNullsCountEnable = 'False'
+	Fixed Label Number = '10'
+	Fixed Step Size = '0,01'
+	IncludeIndicator = 'True'
+	Label Increment Mode = '1'
+	ManualMode = '0'
+	MarginBottom = '5'
+	MarginTop = '5'
+	Maximum = '2684,57777777778'
+	Minimum = '2633,02222222222'
+	MovementSize.Long = '1'
+	MovementSize.Metric = 'False'
+	MovementSize.Price = '5'
+	OverlayDataSeries = 'False'
+	PriceRange.Above = '1,79769313486232E+308'
+	PriceRange.Below = '1,79769313486232E+308'
+	ScaleType = '0'
+	UseMargins = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject]
+	AutoMode = '1'
+	EnableProcessing = '0'
+	PriceScaleType = '105'
+	SelectedId = '0'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject\Item 0]
+	Suffix = 'x'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject\Item 1]
+	Suffix = 'c'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject\Item 2]
+	Suffix = 'k'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject\Item 3]
+	Suffix = 'm'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\LabelProcessingObject\Item 4]
+	Suffix = 'b'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler]
+	ColorOnly = '0'
+	DisplayAsPercentage = '0'
+	ImbalanceBidAsk = '0'
+	ImbalanceCandle = '1'
+	ImbalanceColorizing = '0'
+	ImbalanceMinDif = '0'
+	ImbalancePercentage = '200'
+	POC = '0'
+	PriceMarker = '1'
+	PriceMarkerLine = '0'
+	ShowCSFrame = '0'
+	ShowImbalanceArrow = '1'
+	ShowInvisiblePriceLevels = '0'
+	ShowMaxVolume = '0'
+	ShowOpenCloseMarkers = '1'
+	Show_X_as_I = '0'
+	UseStaticFontSize = '0'
+	VolumeDeltaPrintType = '0'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle]
+	Gradient = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line0]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line1]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line10]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line100]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line101]
+	Alpha = '255'
+	Color = '12632256'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line102]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line103]
+	Alpha = '255'
+	Color = '16761087'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line104]
+	Alpha = '255'
+	Color = '16711680'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line105]
+	Alpha = '255'
+	Color = '16760832'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line106]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line107]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line108]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line109]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line11]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line110]
+	Alpha = '255'
+	Color = '16761087'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line111]
+	Alpha = '255'
+	Color = '16711680'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line112]
+	Alpha = '255'
+	Color = '16760832'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line113]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line114]
+	Alpha = '255'
+	Color = '12632256'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line115]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line116]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line117]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line118]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line119]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line12]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line120]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line121]
+	Alpha = '255'
+	Color = '0'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line122]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line123]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line124]
+	Alpha = '255'
+	Color = '0'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line125]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line126]
+	Alpha = '255'
+	Color = '32768'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line127]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line128]
+	Alpha = '255'
+	Color = '32768'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line129]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line13]
+	Alpha = '255'
+	Color = '16633700'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line130]
+	Alpha = '255'
+	Color = '32768'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line131]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line132]
+	Alpha = '255'
+	Color = '32768'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line133]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line134]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line135]
+	Alpha = '255'
+	Color = '16711680'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line136]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line137]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line138]
+	Alpha = '255'
+	Color = '2124031'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line139]
+	Alpha = '255'
+	Color = '0'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line14]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line140]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line141]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line142]
+	Alpha = '255'
+	Color = '2124031'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line143]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line144]
+	Alpha = '255'
+	Color = '16776960'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line145]
+	Alpha = '255'
+	Color = '16776960'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line146]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line147]
+	Alpha = '255'
+	Color = '16776960'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line148]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line149]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line15]
+	Alpha = '255'
+	Color = '16710844'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line150]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line151]
+	Alpha = '255'
+	Color = '5784859'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line152]
+	Alpha = '255'
+	Color = '2137932321'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line153]
+	Alpha = '255'
+	Color = '0'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line154]
+	Alpha = '255'
+	Color = '0'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line155]
+	Alpha = '255'
+	Color = '6908265'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line156]
+	Alpha = '255'
+	Color = '2154391913'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line157]
+	Alpha = '255'
+	Color = '6908265'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line158]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line159]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line16]
+	Alpha = '255'
+	Color = '8421631'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line160]
+	Alpha = '255'
+	Color = '65535'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line161]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line162]
+	Alpha = '255'
+	Color = '16711680'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line163]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line164]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line165]
+	Alpha = '255'
+	Color = '16711680'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line166]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line167]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line168]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line169]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line17]
+	Alpha = '255'
+	Color = '7451452'
+	Enabled = '0'
+	Style = '74240'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line170]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line171]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line172]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line173]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line174]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line175]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line176]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line177]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line178]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line179]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line18]
+	Alpha = '255'
+	Color = '8421631'
+	Enabled = '0'
+	Style = '74240'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line180]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line181]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line182]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line183]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line184]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line185]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line186]
+	Alpha = '255'
+	Color = '12623485'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line187]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line188]
+	Alpha = '255'
+	Color = '10551106'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line189]
+	Alpha = '255'
+	Color = '13678493'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line19]
+	Alpha = '255'
+	Color = '11064963'
+	Enabled = '0'
+	Style = '74240'
+	ValueType = '8'
+	Width = '2'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line190]
+	Alpha = '255'
+	Color = '8421504'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line191]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line192]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line193]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line194]
+	Alpha = '255'
+	Color = '10025880'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line195]
+	Alpha = '255'
+	Color = '10025880'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line196]
+	Alpha = '255'
+	Color = '10025880'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line197]
+	Alpha = '255'
+	Color = '13353215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line198]
+	Alpha = '255'
+	Color = '13353215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line199]
+	Alpha = '255'
+	Color = '13353215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line2]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line20]
+	Alpha = '255'
+	Color = '12171775'
+	Enabled = '0'
+	Style = '74240'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line21]
+	Alpha = '255'
+	Color = '7778383'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line22]
+	Alpha = '255'
+	Color = '10254023'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line23]
+	Alpha = '255'
+	Color = '10668423'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line24]
+	Alpha = '255'
+	Color = '12164567'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line25]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line26]
+	Alpha = '255'
+	Color = '12623485'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line27]
+	Alpha = '255'
+	Color = '10551106'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line28]
+	Alpha = '255'
+	Color = '13678493'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line29]
+	Alpha = '255'
+	Color = '12948850'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line3]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line30]
+	Alpha = '255'
+	Color = '8421631'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line31]
+	Alpha = '255'
+	Color = '14599344'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line32]
+	Alpha = '255'
+	Color = '8034025'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line33]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line34]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line35]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line36]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line37]
+	Alpha = '255'
+	Color = '54528'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line38]
+	Alpha = '255'
+	Color = '43776'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line39]
+	Alpha = '255'
+	Color = '33024'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line4]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line40]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line41]
+	Alpha = '255'
+	Color = '213'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line42]
+	Alpha = '255'
+	Color = '171'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line43]
+	Alpha = '255'
+	Color = '129'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line44]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line45]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line46]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line47]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line48]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line49]
+	Alpha = '255'
+	Color = '54528'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line5]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line50]
+	Alpha = '255'
+	Color = '43776'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line51]
+	Alpha = '255'
+	Color = '33024'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line52]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line53]
+	Alpha = '255'
+	Color = '213'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line54]
+	Alpha = '255'
+	Color = '171'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line55]
+	Alpha = '255'
+	Color = '129'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line56]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line57]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line58]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line59]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line6]
+	Alpha = '255'
+	Color = '10066329'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line60]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line61]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line62]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line63]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line64]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line65]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line66]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line67]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line68]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line69]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line7]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '73984'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line70]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line71]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line72]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line73]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line74]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line75]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line76]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line77]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line78]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line79]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line8]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line80]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line81]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line82]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line83]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line84]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line85]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line86]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line87]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line88]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line89]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line9]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line90]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line91]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line92]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line93]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line94]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line95]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line96]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line97]
+	Alpha = '255'
+	Color = '16777215'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line98]
+	Alpha = '255'
+	Color = '255'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\BarStyle\Line99]
+	Alpha = '255'
+	Color = '65280'
+	Enabled = '0'
+	Style = '0'
+	ValueType = '8'
+	Width = '1'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\SymbolType]
+	ChartType = '3'
+	SelectedBarTypeByChart = '4294967295:5 3:1 2147483647:5 '
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\Styler\TPOOptions]
+	TPO_BARS_FRAME_ACTIVE = 'True'
+	TPO_BARS_WIDTH = '80'
+	TPO_BLOCKS_CAS_NAME = 'Default'
+	TPO_BLOCKS_COL_OPEN_MARK = 'False'
+	TPO_BLOCKS_FRAME_ACTIVE = 'True'
+	TPO_BLOCKS_IN_OWN_COLUMNS = 'False'
+	TPO_BLOCKS_USE_CAS = 'True'
+	TPO_CLOSE_ACTIVE = 'True'
+	TPO_CLOSE_HIGHLIGHTED = 'True'
+	TPO_CLOSE_MARKER = 'True'
+	TPO_CLOSE_MARKER_ALIGNMENT = '2'
+	TPO_CLOSE_MARKER_STYLE = '1'
+	TPO_CLOSE_OVERRIDDEN = 'False'
+	TPO_FILL_EMPTY_LEVELS = 'False'
+	TPO_FONT_NAME = 'Arial'
+	TPO_FONT_SIZE = '8'
+	TPO_FORCE_PI_ACTIVE = 'False'
+	TPO_FORCE_PI_VALUE = '50'
+	TPO_IBR1_ACTIVE = 'True'
+	TPO_IBR1_EXTENSION = 'False'
+	TPO_IBR1_SIZE = '50'
+	TPO_IBR1_STICK = 'True'
+	TPO_IBR2_ACTIVE = 'False'
+	TPO_IBR2_EXTENSION = 'False'
+	TPO_IBR2_SIZE = '0'
+	TPO_IBR2_STICK = 'True'
+	TPO_IBR3_ACTIVE = 'False'
+	TPO_IBR3_EXTENSION = 'False'
+	TPO_IBR3_SIZE = '0'
+	TPO_IBR3_STICK = 'True'
+	TPO_IBR4_ACTIVE = 'False'
+	TPO_IBR4_EXTENSION = 'False'
+	TPO_IBR4_SIZE = '0'
+	TPO_IBR4_STICK = 'True'
+	TPO_IBR_ACTIVE = 'True'
+	TPO_IBR_SHOW_EXTENSIONS = 'False'
+	TPO_IBR_SHOW_MARKER = 'True'
+	TPO_IBR_SIZE = '2'
+	TPO_INVERTED_POC_TEXT = 'True'
+	TPO_LASTFORCE_PI = '-1'
+	TPO_LETTERS_ALWAYS_LETTERS = 'False'
+	TPO_LETTERS_APPLY_TO_BK = 'False'
+	TPO_LETTERS_BACKGROUND_ACTIVE = 'False'
+	TPO_LETTERS_CAS_NAME = 'Default'
+	TPO_LETTERS_COL_OPEN_MARK = 'False'
+	TPO_LETTERS_IN_OWN_COLUMNS = 'False'
+	TPO_LETTERS_USE_CAS = 'True'
+	TPO_MIDPOINT_EXTENSIONS = 'False'
+	TPO_MIDPOINT_HIGHLIGHTED = 'True'
+	TPO_MIDPOINT_MARKER = 'False'
+	TPO_MIDPOINT_MARKER_ALIGNMENT = '1'
+	TPO_MIDPOINT_MARKER_STYLE = '1'
+	TPO_OPEN_ACTIVE = 'True'
+	TPO_OPEN_HIGHLIGHTED = 'True'
+	TPO_OPEN_MARKER = 'True'
+	TPO_OPEN_MARKER_ALIGNMENT = '2'
+	TPO_OPEN_MARKER_STYLE = '1'
+	TPO_OPEN_OVERRIDDEN = 'False'
+	TPO_OR_ACTIVE = 'False'
+	TPO_OR_SHOW_EXTENSIONS = 'True'
+	TPO_OR_SHOW_MARKER = 'False'
+	TPO_OR_SIZE = '5'
+	TPO_POC_ACTIVE = 'True'
+	TPO_POC_MARKER_ALIGNMENT = '2'
+	TPO_POC_MARKER_STYLE = '2'
+	TPO_POC_SHOW_EXTENSIONS = 'True'
+	TPO_POC_SHOW_IN_TPO = 'False'
+	TPO_POC_SHOW_MARKER = 'True'
+	TPO_SEQUENCE = 'ABCDEFGHIJKLMNPQRSTVWXYZabcdefghijklmnpqrstvwxyz0123456789'
+	TPO_SHOW_COUNTS = 'False'
+	TPO_SHOW_DATA_BAR = 'False'
+	TPO_SHOW_LEFT_BRACKETS = 'True'
+	TPO_SHOW_MIDPOINT = 'False'
+	TPO_SHOW_RIGHT_BRACKETS = 'True'
+	TPO_SHOW_STICK = 'True'
+	TPO_SHOW_VOLUME_PROFILE = 'True'
+	TPO_STYLE = '1'
+	TPO_UI_STATE = '0'
+	TPO_UPDATED_CAS = ''
+	TPO_USE_STATIC_FONT_SIZE = 'False'
+	TPO_VA_ACTIVE = 'True'
+	TPO_VA_ACTIVE2 = 'False'
+	TPO_VA_BOX_ACTIVE = 'True'
+	TPO_VA_BOX_ACTIVE2 = 'True'
+	TPO_VA_CALCULATION_TYPE = '1'
+	TPO_VA_SHOW_BACKGROUND = 'True'
+	TPO_VA_SHOW_BACKGROUND2 = 'True'
+	TPO_VA_SHOW_EXTENSIONS = 'False'
+	TPO_VA_SHOW_EXTENSIONS2 = 'False'
+	TPO_VA_SHOW_IN_TPO = 'False'
+	TPO_VA_SHOW_LEFT_BRACKETS = 'False'
+	TPO_VA_SHOW_LEFT_BRACKETS2 = 'False'
+	TPO_VA_SHOW_RIGHT_BRACKETS = 'False'
+	TPO_VA_SHOW_RIGHT_BRACKETS2 = 'False'
+	TPO_VA_SIZE = '70'
+	TPO_VA_SIZE2 = '25'
+	TPO_VA_SOURCE_TYPE = '1'
+	TPO_VOLUMES = 'False'
+	TPO_VP_BAR_WIDTH = '80'
+	TPO_VP_Border = 'False'
+	TPO_VP_INTERNAL_RECALCAUTO = 'False'
+	TPO_VP_ORIENTATION = '2'
+	TPO_VP_POC = 'True'
+	TPO_VP_VALUE_AREA = 'False'
+	TPO_VP_VALUE_AREA2 = 'False'
+	TPO_VP_VALUE_AREA_SIZE = '70'
+	TPO_VP_VALUE_AREA_SIZE2 = '25'
+
+[Wsp\%Window_Num%\ChartManager\%Chart_Num%\Series_0\VolumeObject]
+	VolumeBarWidth = '1'
+	VolumeBarsBackCount = '100'
+	VolumeBarsType = '2'
+	VolumeDataRangeType = '3'
+	VolumePlotNumber = '1'
+

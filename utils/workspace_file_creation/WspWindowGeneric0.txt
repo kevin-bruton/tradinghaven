@@ -1,0 +1,43 @@
+[Wsp\Window_0]
+	ContainerHeight = '554'
+	ContainerWidth = '1526'
+	Flags = '0'
+	Height = '184'
+	Left = '259'
+	MinX = '-1'
+	MinY = '-1'
+	State = '1'
+	Top = '30'
+	ViewType = '0'
+	Width = '763'
+
+[Wsp\Window_0\ChartManager]
+	ChartCount = '1'
+	OFFSeriesCount = '0'
+
+[Wsp\Window_0\ChartManager\Background]
+	BackgroundColor = '0'
+
+[Wsp\Window_0\ChartManager\CaptionShow]
+	ShowCaption = '1'
+
+[Wsp\Window_0\ChartManager\Chart_0]
+	LSeriesNum = '0'
+	PencentHeight = '1'
+	RSeriesNum = '0'
+	SeriesCount = '1'
+	invert Scale = '0'
+
+[Wsp\Window_0\ChartManager\Chart_0\Series_0]
+	DataNumber = '0'
+	DrawingsCount = '0'
+	ResolutionLinkId = '0'
+	ResolutionWsGlobal = '0'
+	SeriesType = '1'
+	SymbolLinkColor = '0'
+	SymbolLinkId = '0'
+	SymbolWsGlobal = '0'
+
+[Wsp\Window_0\ChartManager\Chart_0\Series_0\DataSeries]
+	MergeDataSources = '0'
+
