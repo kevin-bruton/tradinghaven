@@ -1,0 +1,19 @@
+database_directory: "C:/Users/kevin/tradinghaven/"
+multicharts_data_directory: "C:/Users/Admin/AppData/Local/TS Support/MultiCharts64/14.0.25218.400/"
+orders_update_frequency: "1_m"
+connection_update_frequency: "30_s"
+send_connection_messages: true
+send_position_messages: true
+telegram_token: ""
+telegram_chat_id: ""
+api_key: ""
+client_id: "secret"
+ssl_privkey: ""
+ssl_fullchain: ""
+enable_api: true
+enable_cron: false
+enable_ib: false
+read_logs_on_startup: false
+connect_to_ib: false
+mc_status_dir: ""
+enable_openapi_docs: true

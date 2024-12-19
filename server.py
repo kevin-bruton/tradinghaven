@@ -24,20 +24,24 @@ if get_config_value('read_logs_on_startup'):
   read_all_logs()
 
 cron_thread = Thread(target=run_cron, daemon=True)
-ib_thread = Thread(target=run_ib, daemon=True)
+enable_ib = get_config_value('enable_ib')
+if enable_ib:
+  ib_thread = Thread(target=run_ib, daemon=True)
 if enable_api:
   api_server_thread = Thread(target=run_api_server, daemon=True)
   api_server_thread.start()
   sleep(5)
 cron_thread.start()
-ib_thread.start()
+if enable_ib:
+  ib_thread.start()
 
 try:
   while cron_thread.is_alive() \
     or (enable_api and api_server_thread.is_alive()) \
-    or ib_thread.is_alive():
+    or (enable_ib and ib_thread.is_alive()):
       cron_thread.join(1)
-      ib_thread.join(1)
+      if enable_ib:
+        ib_thread.join(1)
       if enable_api:
         api_server_thread.join(1)
 finally:

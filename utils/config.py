@@ -1,4 +1,5 @@
 import json
+import yaml
 from os import path
 
 config = {}
@@ -16,17 +17,20 @@ default_config = {
 
 def load_config(root_dir):
   global config
-  config_file = path.join(root_dir, 'config.json')
+  config_file = path.join(root_dir, 'config.yaml')
   if not path.exists(config_file):
     with open(config_file, "w") as file:
-      json.dump(default_config, file, indent=2)
+      #json.dump(default_config, file, indent=2)
+      yaml.dump(default_config, file)
     config = default_config
   else:
     with open(config_file, "r") as file:
-      config = json.load(file)
+      #config = json.load(file)
+      config = yaml.safe_load(file)
   config['root_dir'] = root_dir
   print('\nLoaded config:')
-  print(json.dumps(config, indent=2) + '\n')
+  #print(json.dumps(config, indent=2) + '\n')
+  print(yaml.dump(config))
 
 def get_config_value(key):
   global config
